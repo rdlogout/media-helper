@@ -3,11 +3,14 @@ FROM oven/bun:1 as build
 # Set working directory
 WORKDIR /app
 
-# Copy source code
-COPY src/ .
+# Copy package.json and bun.lockb
+COPY package.json bun.lockb ./
 
 # Install dependencies
-RUN bun add hono
+RUN bun install
+
+# Copy source code
+COPY src/ .
 
 # Bundle the application for optimization
 RUN bun build --target bun ./index.ts --outfile server.js
