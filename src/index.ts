@@ -14,11 +14,12 @@ export default new Hono().all("/:path", async (c, next) => {
 	console.log(body);
 	const action = actions[path];
 	if (!action) return c.json({ error: "Invalid action" }, 400);
-	const [info, file] = await action(body, c);
-	return new Response(file, {
+	const file = body.get("file") as File;
+	const [respFile, fileInfo] = await Promise.all([action(body, c), getFileInfo(file)]);
+	return new Response(respFile, {
 		headers: {
-			"Content-Type": file.type,
-			"X-INFO": JSON.stringify(info),
+			"Content-Type": respFile.type,
+			"X-INFO": JSON.stringify(fileInfo),
 		},
 	});
 });
