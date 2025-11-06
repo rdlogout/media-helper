@@ -3,14 +3,14 @@ import { getThumbnail } from "./thumbnail";
 import { getFileInfo } from "./info";
 
 const actions = {
-	getThumbnail,
-	getFileInfo,
+	thumbnail: getThumbnail,
+	info: getFileInfo,
 } as any;
 
 export default new Hono().all("/:path", async (c, next) => {
 	const path = c.req.param("path");
 	console.log(path);
-	const body = await c.req.formData();
+	const body = await c.req.parseBody();
 	console.log(body);
 	const action = actions[path];
 	if (!action) return c.json({ error: "Invalid action" }, 400);
