@@ -4,7 +4,7 @@ import { Context } from "hono";
 import { tmpdir } from "os";
 import { join } from "path";
 
-export const getFileInfo = async (file: File, c: Context) => {
+export const getFileInfo = async (file: File) => {
 	const type = file.type.split("/")[0];
 	const tempPath = join(tmpdir(), file.name);
 	await writeFile(tempPath, Buffer.from(await file.arrayBuffer()));

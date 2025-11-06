@@ -1,7 +1,7 @@
 import { Context, Hono } from "hono";
 import { unlink } from "node:fs/promises";
 
-export const getThumbnail = async (body: FormData, c: Context): Promise<File> => {
+export const getThumbnail = async (body: FormData): Promise<File> => {
 	const file = body.get("file") as File;
 	const height = body.get("height")?.toString() || "200";
 	const width = body.get("width")?.toString() || "200";
@@ -39,12 +39,13 @@ export const getThumbnail = async (body: FormData, c: Context): Promise<File> =>
 
 	const thumbnail = Bun.file(tmpOutputFile);
 
-	c.executionCtx.waitUntil(
-		(async () => {
-			await unlink(tmpInputFile);
-			await unlink(tmpOutputFile);
-		})()
-	);
+	const clean = async () => {
+		await unlink(tmpInputFile);
+		await unlink(tmpOutputFile);
+	};
+
+	clean();
+
 	return new File([await thumbnail.arrayBuffer()], `${file.name.split(".")[0]}-thumbnail.${format}`, {
 		type: `image/${format}`,
 	});
