@@ -9,7 +9,9 @@ const actions = {
 
 export default new Hono().all("/:path", async (c, next) => {
 	const path = c.req.param("path");
+	console.log(path);
 	const body = await c.req.formData();
+	console.log(body);
 	const action = actions[path];
 	if (!action) return c.json({ error: "Invalid action" }, 400);
 	const [info, file] = await action(body, c);
