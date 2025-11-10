@@ -1,0 +1,17 @@
+{
+	"name": "image-proxy",
+	"type": "module",
+	"scripts": {
+		"dev": "wrangler dev",
+		"deploy": "alchemy deploy --adopt",
+		"cf-typegen": "wrangler types --env-interface CloudflareBindings"
+	},
+	"dependencies": {
+		"@cf-wasm/photon": "^0.2.1",
+		"alchemy": "^0.77.0",
+		"hono": "^4.10.4"
+	},
+	"devDependencies": {
+		"wrangler": "^4.4.0"
+	}
+}
