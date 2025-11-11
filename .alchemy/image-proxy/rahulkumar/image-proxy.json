@@ -1,0 +1,140 @@
+{
+  "kind": "cloudflare::Worker",
+  "id": "image-proxy",
+  "fqn": "image-proxy/rahulkumar/image-proxy",
+  "seq": 1,
+  "data": {},
+  "status": "updated",
+  "output": {
+    "Symbol(alchemy::ResourceKind)": "cloudflare::Worker",
+    "Symbol(alchemy::ResourceID)": "image-proxy",
+    "Symbol(alchemy::ResourceFQN)": "image-proxy/rahulkumar/image-proxy",
+    "Symbol(alchemy::ResourceScope)": {
+      "@scope": null
+    },
+    "Symbol(alchemy::ResourceSeq)": 1,
+    "name": "image-proxy",
+    "entrypoint": "./src/service.ts",
+    "compatibility": "node",
+    "bindings": {
+      "FFMPEG": {
+        "type": "container",
+        "id": "media-container",
+        "name": "image-proxy-media-container-rahulkumar",
+        "className": "FFMPEGContainer",
+        "maxInstances": 10,
+        "instanceType": "lite",
+        "sqlite": true,
+        "image": {
+          "Symbol(alchemy::ResourceKind)": "docker::Image",
+          "Symbol(alchemy::ResourceID)": "media-container",
+          "Symbol(alchemy::ResourceFQN)": "image-proxy/rahulkumar/media-container",
+          "Symbol(alchemy::ResourceScope)": {
+            "@scope": null
+          },
+          "Symbol(alchemy::ResourceSeq)": 0,
+          "name": "af4f5ea7519fbdb822be15800cce94f1/image-proxy-media-container-rahulkumar",
+          "tag": "latest-1762836606066",
+          "build": {
+            "platform": "linux/amd64",
+            "context": "./ffmpeg"
+          },
+          "registry": {
+            "server": "registry.cloudflare.com",
+            "username": "v1",
+            "password": {
+              "@secret": {
+                "version": "v1",
+                "ciphertext": "1NuorYveydbe4Abz5RXMvC+Y5FxYS282yN36fFX7nvhsSviT7bZ72Adrh+MFjfvzsnEvrfLltqQGl0tsthiNGxAm4kqAePJCiqfiw6jC94lwCBtpOzi0LV0taF+UZx7qfjq2HRvieQi4XnKPcoYmamzeUQV1FM17fJrM0gUPZ1Mg1pPikhHkpM8fHK38dZMTtoUE3yfBC4JRPAEEGchQ7k7ZjHdCDTrLNSjAnFNoLmW1s/tDWSS0dPkHKguwRe5CKGZgIUnmg4NX003xYFo/rkvtkZsZNwVpW+VxqFn7JerwAVndRromXYicUhWk/vSrCkgVLieRN01B0nC7fP1Zz0zMuOUrnZEa4VNP6TTLpsT1Ho5wDa8EiIQM41zifUsVcloJUWWl9fm/qrhcBeAsZ9WPFhPHnwiL5l6Q8iXxOUp8DHcuhfvFMVbI/jk75h5A05EtqMOqVwJxLb4tW0iknkokoAjoD9o+GzczeUV+JEBftC+mh7+0Z0m+pthN7krP",
+                "iv": "/e9TwVfTtA+g0bjA",
+                "salt": "YeLxDI1DXXQEz2diuValug==",
+                "tag": "ff2Xpyqk28ZU8l6sOpqHqA=="
+              }
+            }
+          },
+          "imageRef": "registry.cloudflare.com/af4f5ea7519fbdb822be15800cce94f1/image-proxy-media-container-rahulkumar:latest-1762836606066",
+          "repoDigest": "registry.cloudflare.com/af4f5ea7519fbdb822be15800cce94f1/image-proxy-media-container-rahulkumar@sha256:2df4c2f3fa317c144667c33c8b96bfbeb8505178b36e1ac05828b400b93b107e",
+          "builtAt": 1762836640250
+        }
+      }
+    },
+    "dev": {
+      "hasRemote": true
+    },
+    "compatibilityFlags": [
+      "nodejs_compat",
+      "nodejs_compat_populate_process_env"
+    ],
+    "observability": {
+      "enabled": true
+    },
+    "type": "service",
+    "id": "image-proxy",
+    "cwd": "",
+    "compatibilityDate": "2025-10-31",
+    "format": "esm",
+    "createdAt": {
+      "@date": "2025-11-10T14:06:47.442Z"
+    },
+    "updatedAt": {
+      "@date": "2025-11-11T04:50:53.647Z"
+    },
+    "url": "https://image-proxy.base15log.workers.dev"
+  },
+  "props": {
+    "name": "image-proxy",
+    "entrypoint": "./src/service.ts",
+    "compatibility": "node",
+    "bindings": {
+      "FFMPEG": {
+        "type": "container",
+        "id": "media-container",
+        "name": "image-proxy-media-container-rahulkumar",
+        "className": "FFMPEGContainer",
+        "maxInstances": 10,
+        "instanceType": "lite",
+        "sqlite": true,
+        "image": {
+          "Symbol(alchemy::ResourceKind)": "docker::Image",
+          "Symbol(alchemy::ResourceID)": "media-container",
+          "Symbol(alchemy::ResourceFQN)": "image-proxy/rahulkumar/media-container",
+          "Symbol(alchemy::ResourceScope)": {
+            "@scope": null
+          },
+          "Symbol(alchemy::ResourceSeq)": 0,
+          "name": "af4f5ea7519fbdb822be15800cce94f1/image-proxy-media-container-rahulkumar",
+          "tag": "latest-1762836606066",
+          "build": {
+            "platform": "linux/amd64",
+            "context": "./ffmpeg"
+          },
+          "registry": {
+            "server": "registry.cloudflare.com",
+            "username": "v1",
+            "password": {
+              "@secret": {
+                "version": "v1",
+                "ciphertext": "3EmKuv5qa69QvqUqPJtEtwEwha1RttAwKSsxYJDh4i37n15mUiTzKNgN8cV4/TqujcTM0+us5ZV3fJXmQ6bcg2HUkhRt4T54bMIHNYnsYQXau/788LDcjWOitXh3+MWyiOSG6kfZ89zxUiKPu0PDKUT4WYneKD7crmIA+nWLq2hiHob4w6jHgb3UsPkiT6TE4dfDEgACc1YNy4fzoXhJaOampXjDclpjpL86OWxrkODQeJrDw1FhsaTx8st6ifLdwbYmdsNre5riVtKca7AM/pV3ECglINyaCp0rEJHqlJ32jaELY6AsbBI6kkU9Ff2BZ8uzlnIffc7RaiJH40nR9PFVNou2GpbpgUh7Vfqd8Q6FUL+dJjOWIChqPBsMtCNYYzOgXSu532TM/7SlOGoAUTp+p3c2Quk16a1POj/2r060+JD1MJBRz2pP1CoOoWWeLVwB6XojtvFiorWWcffl14RDlxhyvIr3jCOPucjWgAvzjxCLkW1uXE2VRergfwZx",
+                "iv": "cyc9PjVRtiU3k+k2",
+                "salt": "f5+1svJ/lBsdyggsDUanzw==",
+                "tag": "HbLLH7Kzk8CPFkw95W9Flg=="
+              }
+            }
+          },
+          "imageRef": "registry.cloudflare.com/af4f5ea7519fbdb822be15800cce94f1/image-proxy-media-container-rahulkumar:latest-1762836606066",
+          "repoDigest": "registry.cloudflare.com/af4f5ea7519fbdb822be15800cce94f1/image-proxy-media-container-rahulkumar@sha256:2df4c2f3fa317c144667c33c8b96bfbeb8505178b36e1ac05828b400b93b107e",
+          "builtAt": 1762836640250
+        }
+      }
+    },
+    "dev": {
+      "port": 8787
+    },
+    "compatibilityFlags": [
+      "nodejs_compat"
+    ],
+    "observability": {
+      "enabled": true
+    }
+  }
+}

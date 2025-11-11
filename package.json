@@ -1,0 +1,22 @@
+{
+	"name": "image-proxy",
+	"type": "module",
+	"scripts": {
+		"dev": "alchemy dev",
+		"deploy": "alchemy deploy --adopt",
+		"cf-typegen": "wrangler types --env-interface CloudflareBindings"
+	},
+	"dependencies": {
+		"@cf-wasm/photon": "^0.2.1",
+		"@cloudflare/containers": "^0.0.30",
+		"@ffmpeg/core": "^0.12.10",
+		"@ffmpeg/ffmpeg": "^0.12.15",
+		"@ffmpeg/util": "^0.12.2",
+		"alchemy": "^0.77.0",
+		"hono": "^4.10.4",
+		"libav.js": "^6.8.8"
+	},
+	"devDependencies": {
+		"wrangler": "^4.4.0"
+	}
+}

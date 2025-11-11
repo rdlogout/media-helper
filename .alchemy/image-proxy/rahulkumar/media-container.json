@@ -1,0 +1,60 @@
+{
+  "kind": "docker::Image",
+  "id": "media-container",
+  "fqn": "image-proxy/rahulkumar/media-container",
+  "seq": 0,
+  "data": {},
+  "status": "updated",
+  "output": {
+    "Symbol(alchemy::ResourceKind)": "docker::Image",
+    "Symbol(alchemy::ResourceID)": "media-container",
+    "Symbol(alchemy::ResourceFQN)": "image-proxy/rahulkumar/media-container",
+    "Symbol(alchemy::ResourceScope)": {
+      "@scope": null
+    },
+    "Symbol(alchemy::ResourceSeq)": 0,
+    "name": "af4f5ea7519fbdb822be15800cce94f1/image-proxy-media-container-rahulkumar",
+    "tag": "latest-1762836606066",
+    "build": {
+      "platform": "linux/amd64",
+      "context": "./ffmpeg"
+    },
+    "registry": {
+      "server": "registry.cloudflare.com",
+      "username": "v1",
+      "password": {
+        "@secret": {
+          "version": "v1",
+          "ciphertext": "rLvvIFeHEBKZth2zSKednFluY+s8BQ814UaTPOVkcba51l1O63pO6j1PuoIvjnQD/qMjldZ79Q1nW+eYz26JB5RvSLmepr0VQOrNqkWCMqaopbUGnrbo2Yk2V1gdIkxAW+94ugWsBQ7HsATeCJak/l6iMwiHVLmCVPngC46yzeWGMWxUchx3ATHUbt8NXVkuQqatVaHFtY7JJ+ZR2rR/LjAp7nvn08HBJOiQgeViCXP73jU9ThhK4EvvTtkp2OME9yHS2OfUeJwuTkSfF46mMNk3WZf1Ej9Ir3nA9rwjanGUMnC2gbSsQQSA3eOs1Hc/cmWiq68zJI1X5YMt3dTVfNjvB6UkqaJivvUbRVrgn4lBW2vEKbPNvXn8ydT56afm/wannxSUeDwxwGNJ2KnKFl0W0EyHVlsK3NdWQ6lOX7fgEzBzlQUJn2fmR8ypnWl+SmCI4el+JxDQ2nGlTJk0Y2858M/LFbc2IUTIiZkoTbiFnOhV1p9SrqeWXSdwt7Eq",
+          "iv": "Q/Pf1KFdFksHINzL",
+          "salt": "JEjXYjxKuFuDOQT/yQoqVw==",
+          "tag": "Y2wiZsmway2RfuN8xyNCDQ=="
+        }
+      }
+    },
+    "imageRef": "registry.cloudflare.com/af4f5ea7519fbdb822be15800cce94f1/image-proxy-media-container-rahulkumar:latest-1762836606066",
+    "repoDigest": "registry.cloudflare.com/af4f5ea7519fbdb822be15800cce94f1/image-proxy-media-container-rahulkumar@sha256:2df4c2f3fa317c144667c33c8b96bfbeb8505178b36e1ac05828b400b93b107e",
+    "builtAt": 1762836640250
+  },
+  "props": {
+    "name": "af4f5ea7519fbdb822be15800cce94f1/image-proxy-media-container-rahulkumar",
+    "tag": "latest-1762836606066",
+    "build": {
+      "platform": "linux/amd64",
+      "context": "./ffmpeg"
+    },
+    "registry": {
+      "server": "registry.cloudflare.com",
+      "username": "v1",
+      "password": {
+        "@secret": {
+          "version": "v1",
+          "ciphertext": "rDedU1WN27nUSOyPyjoqlqkPfnH+z7IxXsqVoSpzfg+bmnbKEsjhKc7h054oenvKH2LSlctvwc70o3RXsjVZ/6QO20E1Qsa1h5LeSLTlZYfuaEao2PEJQuas+ZzVSmVT4Qs7R+8jYxD45UnBkHtq0Y71tiPODX/AO2TaN1H+pvrkqyQUKakSZKvS/cs+ZDZRMqqRSvaOXcM1Vr4KEJj63tbdfOkNyXtwleO70UUMp3bWrBEcG2N31Jz8cuDU+/NZ79+ME8xvHLGr/NYaEwfMtip45jBaOzogH1sgQj4bnJVzAHePiV/M7Q6BmqgP2vrY9lb9TXPoxkkmZhtviEYs1THxyNIPL1bXVXvPQdN/v7CFkxocMBMav+ig6GAq/bNvwZ1jZVI9pFZCwVeHsdImwAB0DAmdN7/yZC1lsOm/yH4+MeCNQxHYw0OtDTi2wjb2pWEzl1shTa89kiP5mNHO44AIiwiYCiWuMKkvjMLXPm6TK9VUyar70QBdtQ1ipfhH",
+          "iv": "F3CW3b9ybJgyCDPd",
+          "salt": "MIUgWZ/edJLrrZM0F1pNJQ==",
+          "tag": "I4NFhSo721irOAWG27uvgA=="
+        }
+      }
+    }
+  }
+}
