@@ -9,7 +9,7 @@ type FileInfo = {
 const getFileInfo = async (file: File) => {
 	const formData = new FormData();
 	formData.append("file", file);
-	const resp = await makeRequestToFFmpeg("/info.json", "POST", formData);
+	const resp = await makeRequestToFFmpeg("/info", "POST", formData);
 	const data = await resp.json();
 	return data as FileInfo;
 };
@@ -17,7 +17,11 @@ const getFileInfo = async (file: File) => {
 export default new Hono().post("/", async (c) => {
 	const body = await c.req.parseBody();
 	const file = body.file as File;
+	let start = performance.now();
 	if (!file) return c.json({ error: "Invalid file" }, 400);
 	const info = await getFileInfo(file);
-	return c.json(info);
+	return c.json({
+		...info,
+		time: performance.now() - start,
+	});
 });

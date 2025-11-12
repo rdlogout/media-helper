@@ -1396,6 +1396,161 @@
       ],
       "format": "esm"
     },
+    "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/utils/compress.js": {
+      "bytes": 722,
+      "imports": [
+        {
+          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-console",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/@cloudflare+unenv-preset@2.7.7_unenv@2.0.0-rc.21_workerd@1.20251105.0/node_modules/@cloudflare/unenv-preset/dist/runtime/polyfill/performance.mjs",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/middleware/compress/index.js": {
+      "bytes": 1483,
+      "imports": [
+        {
+          "path": "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/utils/compress.js",
+          "kind": "import-statement",
+          "original": "../../utils/compress.js"
+        },
+        {
+          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-console",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/@cloudflare+unenv-preset@2.7.7_unenv@2.0.0-rc.21_workerd@1.20251105.0/node_modules/@cloudflare/unenv-preset/dist/runtime/polyfill/performance.mjs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/middleware/context-storage/index.js": {
+      "bytes": 484,
+      "imports": [
+        {
+          "path": "node:async_hooks",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-console",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/@cloudflare+unenv-preset@2.7.7_unenv@2.0.0-rc.21_workerd@1.20251105.0/node_modules/@cloudflare/unenv-preset/dist/runtime/polyfill/performance.mjs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/lib/ffmpeg.ts": {
+      "bytes": 495,
+      "imports": [
+        {
+          "path": "node_modules/.pnpm/@cloudflare+containers@0.0.30/node_modules/@cloudflare/containers/dist/index.js",
+          "kind": "import-statement",
+          "original": "@cloudflare/containers"
+        },
+        {
+          "path": "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/middleware/context-storage/index.js",
+          "kind": "import-statement",
+          "original": "hono/context-storage"
+        },
+        {
+          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-console",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/@cloudflare+unenv-preset@2.7.7_unenv@2.0.0-rc.21_workerd@1.20251105.0/node_modules/@cloudflare/unenv-preset/dist/runtime/polyfill/performance.mjs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/routes/file-info.ts": {
+      "bytes": 724,
+      "imports": [
+        {
+          "path": "src/lib/ffmpeg.ts",
+          "kind": "import-statement",
+          "original": "@/lib/ffmpeg"
+        },
+        {
+          "path": "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/index.js",
+          "kind": "import-statement",
+          "original": "hono"
+        },
+        {
+          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-console",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/@cloudflare+unenv-preset@2.7.7_unenv@2.0.0-rc.21_workerd@1.20251105.0/node_modules/@cloudflare/unenv-preset/dist/runtime/polyfill/performance.mjs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
     "node_modules/.pnpm/@cf-wasm+internals@0.1.0/node_modules/@cf-wasm/internals/dist/polyfills/image-data.js": {
       "bytes": 4960,
       "imports": [
@@ -1516,7 +1671,7 @@
       "format": "esm"
     },
     "src/routes/resize-image.ts": {
-      "bytes": 2663,
+      "bytes": 7726,
       "imports": [
         {
           "path": "src/lib/photon.ts",
@@ -1551,111 +1706,8 @@
       ],
       "format": "esm"
     },
-    "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/middleware/context-storage/index.js": {
-      "bytes": 484,
-      "imports": [
-        {
-          "path": "node:async_hooks",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-console",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/@cloudflare+unenv-preset@2.7.7_unenv@2.0.0-rc.21_workerd@1.20251105.0/node_modules/@cloudflare/unenv-preset/dist/runtime/polyfill/performance.mjs",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "<runtime>",
-          "kind": "import-statement",
-          "external": true
-        }
-      ],
-      "format": "esm"
-    },
-    "src/lib/ffmpeg.ts": {
-      "bytes": 495,
-      "imports": [
-        {
-          "path": "node_modules/.pnpm/@cloudflare+containers@0.0.30/node_modules/@cloudflare/containers/dist/index.js",
-          "kind": "import-statement",
-          "original": "@cloudflare/containers"
-        },
-        {
-          "path": "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/middleware/context-storage/index.js",
-          "kind": "import-statement",
-          "original": "hono/context-storage"
-        },
-        {
-          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-console",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/@cloudflare+unenv-preset@2.7.7_unenv@2.0.0-rc.21_workerd@1.20251105.0/node_modules/@cloudflare/unenv-preset/dist/runtime/polyfill/performance.mjs",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "<runtime>",
-          "kind": "import-statement",
-          "external": true
-        }
-      ],
-      "format": "esm"
-    },
-    "src/routes/file-info.ts": {
-      "bytes": 651,
-      "imports": [
-        {
-          "path": "src/lib/ffmpeg.ts",
-          "kind": "import-statement",
-          "original": "@/lib/ffmpeg"
-        },
-        {
-          "path": "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/index.js",
-          "kind": "import-statement",
-          "original": "hono"
-        },
-        {
-          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-console",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/@cloudflare+unenv-preset@2.7.7_unenv@2.0.0-rc.21_workerd@1.20251105.0/node_modules/@cloudflare/unenv-preset/dist/runtime/polyfill/performance.mjs",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "<runtime>",
-          "kind": "import-statement",
-          "external": true
-        }
-      ],
-      "format": "esm"
-    },
     "src/routes/index.ts": {
-      "bytes": 259,
+      "bytes": 319,
       "imports": [
         {
           "path": "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/index.js",
@@ -1663,14 +1715,19 @@
           "original": "hono"
         },
         {
-          "path": "src/routes/resize-image.ts",
+          "path": "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/middleware/compress/index.js",
           "kind": "import-statement",
-          "original": "./resize-image"
+          "original": "hono/compress"
         },
         {
           "path": "src/routes/file-info.ts",
           "kind": "import-statement",
           "original": "./file-info"
+        },
+        {
+          "path": "src/routes/resize-image.ts",
+          "kind": "import-statement",
+          "original": "./resize-image"
         },
         {
           "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process",
@@ -1691,13 +1748,8 @@
       "format": "esm"
     },
     "src/index.ts": {
-      "bytes": 442,
+      "bytes": 399,
       "imports": [
-        {
-          "path": "cloudflare:workers",
-          "kind": "import-statement",
-          "external": true
-        },
         {
           "path": "node_modules/.pnpm/@cloudflare+containers@0.0.30/node_modules/@cloudflare/containers/dist/index.js",
           "kind": "import-statement",
@@ -1737,7 +1789,7 @@
       "imports": [],
       "exports": [],
       "inputs": {},
-      "bytes": 328088
+      "bytes": 340123
     },
     ".alchemy/out/media/index.js": {
       "imports": [
@@ -1757,12 +1809,12 @@
           "external": true
         },
         {
-          "path": "lib/photon_rs_bg.wasm",
+          "path": "node:async_hooks",
           "kind": "import-statement",
           "external": true
         },
         {
-          "path": "node:async_hooks",
+          "path": "lib/photon_rs_bg.wasm",
           "kind": "import-statement",
           "external": true
         }
@@ -1777,13 +1829,13 @@
           "bytesInOutput": 711
         },
         "node_modules/.pnpm/unenv@2.0.0-rc.21/node_modules/unenv/dist/runtime/node/internal/perf_hooks/performance.mjs": {
-          "bytesInOutput": 5851
+          "bytesInOutput": 5852
         },
         "node_modules/.pnpm/unenv@2.0.0-rc.21/node_modules/unenv/dist/runtime/node/perf_hooks.mjs": {
           "bytesInOutput": 0
         },
         "node_modules/.pnpm/@cloudflare+unenv-preset@2.7.7_unenv@2.0.0-rc.21_workerd@1.20251105.0/node_modules/@cloudflare/unenv-preset/dist/runtime/polyfill/performance.mjs": {
-          "bytesInOutput": 414
+          "bytesInOutput": 415
         },
         "node_modules/.pnpm/unenv@2.0.0-rc.21/node_modules/unenv/dist/runtime/node/console.mjs": {
           "bytesInOutput": 1413
@@ -1887,6 +1939,21 @@
         "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/hono.js": {
           "bytesInOutput": 247
         },
+        "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/utils/compress.js": {
+          "bytesInOutput": 651
+        },
+        "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/middleware/compress/index.js": {
+          "bytesInOutput": 1509
+        },
+        "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/middleware/context-storage/index.js": {
+          "bytesInOutput": 309
+        },
+        "src/lib/ffmpeg.ts": {
+          "bytesInOutput": 415
+        },
+        "src/routes/file-info.ts": {
+          "bytesInOutput": 603
+        },
         "node_modules/.pnpm/@cf-wasm+internals@0.1.0/node_modules/@cf-wasm/internals/dist/polyfills/image-data.js": {
           "bytesInOutput": 4984
         },
@@ -1900,25 +1967,16 @@
           "bytesInOutput": 0
         },
         "src/routes/resize-image.ts": {
-          "bytesInOutput": 2321
-        },
-        "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/middleware/context-storage/index.js": {
-          "bytesInOutput": 309
-        },
-        "src/lib/ffmpeg.ts": {
-          "bytesInOutput": 415
-        },
-        "src/routes/file-info.ts": {
-          "bytesInOutput": 525
+          "bytesInOutput": 6666
         },
         "src/routes/index.ts": {
-          "bytesInOutput": 169
+          "bytesInOutput": 185
         },
         "src/index.ts": {
-          "bytesInOutput": 278
+          "bytesInOutput": 279
         }
       },
-      "bytes": 138913
+      "bytes": 145678
     }
   }
 }

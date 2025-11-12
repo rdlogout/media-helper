@@ -1,6 +1,6 @@
 # prod
 dist/
-
+.alchemy/
 # dev
 .yarn/
 !.yarn/releases

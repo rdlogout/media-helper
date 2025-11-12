@@ -3,24 +3,168 @@ import { Hono } from "hono";
 
 type Props = {
 	file: File;
-	width?: number;
-	height?: number;
+	width?: number | string | null;
+	height?: number | string | null;
 	format?: string;
+	quality?: number; // 1-100, lower = smaller file size
+
+	mode?: "cover" | "contain";
 	size?: string;
 };
 const imageUrl = "https://avatars.githubusercontent.com/u/314135";
+const getNumber = (value: number | string | null | undefined) => {
+	if (value === null || value === undefined) {
+		return null;
+	}
+	const val = Number(value);
+	return Number.isNaN(val) || val <= 0 ? null : val;
+};
 
 const resizeImage = async (props: Props) => {
 	const inputBytes = await props.file.arrayBuffer();
 	const inputImage = PhotonImage.new_from_byteslice(new Uint8Array(inputBytes));
-	const height = Number(props.height) || inputImage.get_height();
-	const width = Number(props.width) || inputImage.get_width();
+	const originalWidth = inputImage.get_width();
+	const originalHeight = inputImage.get_height();
 
-	const outputImage = resize(inputImage, width, height, SamplingFilter.Lanczos3);
-	const outputBytes = outputImage.get_bytes_webp();
-	inputImage.free();
-	outputImage.free();
-	return new File([outputBytes], props.file.name, { type: "image/webp" });
+	let width = originalWidth;
+	let height = originalHeight;
+
+	// props.mode can be: 'contain' | 'cover' | 'stretch' | 'fit' (default)
+	const mode = props.mode || "fit";
+	const quality = props.quality ?? (props.width != null || props.height != null ? 65 : 75); // Lower quality for resized images
+	// console.log("Quality calculation:", props.quality, "width:", props.width, "height:", props.height, "final quality:", quality);
+
+	// Use JPEG for all images to allow quality control (WebP without quality control can inflate file sizes)
+	const format = (props.format || "jpeg") as string;
+
+	// If no dimensions specified and image is large, apply reasonable max dimensions for web optimization
+	if (props.width == null && props.height == null && (originalWidth > 1200 || originalHeight > 1200)) {
+		const maxDimension = 1200;
+		if (originalWidth > originalHeight) {
+			width = maxDimension;
+			height = Math.round((maxDimension * originalHeight) / originalWidth);
+		} else {
+			height = maxDimension;
+			width = Math.round((maxDimension * originalWidth) / originalHeight);
+		}
+		// console.log(`Resized large image from ${originalWidth}x${originalHeight} to ${width}x${height}`);
+	}
+
+	// console.log({
+	// 	mode,
+	// 	quality,
+	// 	format,
+	// 	originalWidth,
+	// 	originalHeight,
+	// 	targetWidth: props.width,
+	// 	targetHeight: props.height,
+	// 	getNumberWidth: getNumber(props.width),
+	// 	getNumberHeight: getNumber(props.height),
+	// });
+	// console.log("Final dimensions before resize:", width, "x", height);
+
+	// // Debug the if-else logic
+	// console.log("Condition 1 (height only):", getNumber(props.height) !== null && getNumber(props.width) === null);
+	// console.log("Condition 2 (width only):", getNumber(props.width) !== null && getNumber(props.height) === null);
+	// console.log("Condition 3 (both):", getNumber(props.width) !== null && getNumber(props.height) !== null);
+	if (getNumber(props.height) !== null && getNumber(props.width) === null) {
+		// Only height provided
+		height = getNumber(props.height)!;
+		const aspectRatio = originalWidth / originalHeight;
+		width = Math.round(height * aspectRatio);
+	} else if (getNumber(props.width) !== null && getNumber(props.height) === null) {
+		// Only width provided
+		// console.log("Entering width-only branch");
+		width = getNumber(props.width)!;
+		// console.log("Width set to:", width);
+		const aspectRatio = originalHeight / originalWidth;
+		// console.log("Aspect ratio:", aspectRatio);
+		height = Math.round(width * aspectRatio);
+		// console.log("Height calculated as:", height);
+	} else if (getNumber(props.width) !== null && getNumber(props.height) !== null) {
+		// Both dimensions provided
+		const targetWidth = getNumber(props.width)!;
+		const targetHeight = getNumber(props.height)!;
+
+		switch (mode) {
+			case "contain":
+				// Fit inside the box, maintain aspect ratio
+				const containScale = Math.min(targetWidth / originalWidth, targetHeight / originalHeight);
+				width = Math.round(originalWidth * containScale);
+				height = Math.round(originalHeight * containScale);
+				break;
+
+			case "cover":
+				// Cover the entire box, maintain aspect ratio (may crop)
+				const coverScale = Math.max(targetWidth / originalWidth, targetHeight / originalHeight);
+				width = Math.round(originalWidth * coverScale);
+				height = Math.round(originalHeight * coverScale);
+				break;
+			default:
+				// Fit (default), no cropping
+				width = targetWidth;
+				height = targetHeight;
+				break;
+		}
+	}
+
+	try {
+		// console.log("About to resize to:", width, "x", height);
+		const outputImage = resize(inputImage, width, height, SamplingFilter.Lanczos3);
+
+		// Get bytes with compression based on format
+		let outputBytes: Uint8Array;
+		let mimeType: string;
+		let extension: string;
+
+		switch (format) {
+			case "webp":
+				// WebP (smallest file size) - Photon doesn't support quality parameter for WebP
+				outputBytes = outputImage.get_bytes_webp();
+				mimeType = "image/webp";
+				extension = ".webp";
+				break;
+
+			case "jpeg":
+				// JPEG with quality
+				outputBytes = outputImage.get_bytes_jpeg(quality);
+				mimeType = "image/jpeg";
+				extension = ".jpg";
+				break;
+
+			case "png":
+				// PNG (lossless, larger file size)
+				outputBytes = outputImage.get_bytes();
+				mimeType = "image/png";
+				extension = ".png";
+				break;
+
+			default:
+				outputBytes = outputImage.get_bytes_webp();
+				mimeType = "image/webp";
+				extension = ".webp";
+		}
+
+		inputImage.free();
+		outputImage.free();
+
+		// Update filename extension if needed
+		const originalName = props.file.name;
+		const nameWithoutExt = originalName.replace(/\.[^/.]+$/, "");
+		const newFileName = nameWithoutExt + extension;
+
+		const compressedFile = new File([outputBytes], newFileName, { type: mimeType });
+
+		// Log compression stats
+		// console.log(`Original: ${(props.file.size / 1024).toFixed(2)} KB`);
+		// console.log(`Compressed: ${(compressedFile.size / 1024).toFixed(2)} KB`);
+		// console.log(`Reduction: ${(((props.file.size - compressedFile.size) / props.file.size) * 100).toFixed(1)}%`);
+
+		return compressedFile;
+	} catch (err) {
+		console.log("err", err);
+		return props.file;
+	}
 };
 
 export default new Hono()
@@ -37,30 +181,26 @@ export default new Hono()
 		}
 
 		const url = new URL(c.req.url);
-		const imgUrl = c.req.query("img") || imageUrl;
+		const imgUrl = c.req.query("url") || c.req.query("img") || imageUrl;
 		const inputBytes = await fetch(imgUrl)
 			.then((res) => res.arrayBuffer())
 			.then((buffer) => new Uint8Array(buffer));
+		const quality = Number(url.searchParams.get("quality")) || undefined; // Let resizeImage handle default quality
+		const size = url.searchParams.get("size");
+		const height = url.searchParams.get("height") || size;
+		const width = url.searchParams.get("width") || size;
 
-		const inputImage = PhotonImage.new_from_byteslice(inputBytes);
-		const size = Number(url.searchParams.get("size"));
-		const height = Number(url.searchParams.get("height")) || size || inputImage.get_height();
-		const width = Number(url.searchParams.get("width")) || size || inputImage.get_width();
+		const file = await resizeImage({ file: new File([inputBytes], "image.jpg"), width, height, quality });
 
-		const outputImage = resize(inputImage, width, height, SamplingFilter.Lanczos3);
-
-		const outputBytes = outputImage.get_bytes_webp();
-
-		inputImage.free();
-		outputImage.free();
-
-		const response = new Response(outputBytes as Uint8Array<ArrayBuffer>, {
+		const response = new Response(file.stream(), {
 			headers: {
-				"Content-Type": "image/webp",
+				"Content-Type": file.type,
+				"Cache-Control": "max-age=604800",
+				ETag: file.name,
 			},
 		});
 
-		// c.executionCtx.waitUntil(cache.put(cacheKey, response.clone()));
+		c.executionCtx.waitUntil(cache.put(cacheKey, response.clone()));
 
 		return response;
 	})
