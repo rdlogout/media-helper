@@ -3386,43 +3386,14 @@ var Hono2 = class extends Hono {
   }
 };
 
-// node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/utils/compress.js
-var COMPRESSIBLE_CONTENT_TYPE_REGEX = /^\s*(?:text\/(?!event-stream(?:[;\s]|$))[^;\s]+|application\/(?:javascript|json|xml|xml-dtd|ecmascript|dart|postscript|rtf|tar|toml|vnd\.dart|vnd\.ms-fontobject|vnd\.ms-opentype|wasm|x-httpd-php|x-javascript|x-ns-proxy-autoconfig|x-sh|x-tar|x-virtualbox-hdd|x-virtualbox-ova|x-virtualbox-ovf|x-virtualbox-vbox|x-virtualbox-vdi|x-virtualbox-vhd|x-virtualbox-vmdk|x-www-form-urlencoded)|font\/(?:otf|ttf)|image\/(?:bmp|vnd\.adobe\.photoshop|vnd\.microsoft\.icon|vnd\.ms-dds|x-icon|x-ms-bmp)|message\/rfc822|model\/gltf-binary|x-shader\/x-fragment|x-shader\/x-vertex|[^;\s]+?\+(?:json|text|xml|yaml))(?:[;\s]|$)/i;
-
-// node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/middleware/compress/index.js
-var ENCODING_TYPES = ["gzip", "deflate"];
-var cacheControlNoTransformRegExp = /(?:^|,)\s*?no-transform\s*?(?:,|$)/i;
-var compress = /* @__PURE__ */ __name((options) => {
-  const threshold2 = options?.threshold ?? 1024;
-  return /* @__PURE__ */ __name(async function compress2(ctx, next) {
-    await next();
-    const contentLength = ctx.res.headers.get("Content-Length");
-    if (ctx.res.headers.has("Content-Encoding") || ctx.res.headers.has("Transfer-Encoding") || ctx.req.method === "HEAD" || contentLength && Number(contentLength) < threshold2 || !shouldCompress(ctx.res) || !shouldTransform(ctx.res)) {
-      return;
-    }
-    const accepted = ctx.req.header("Accept-Encoding");
-    const encoding = options?.encoding ?? ENCODING_TYPES.find((encoding2) => accepted?.includes(encoding2));
-    if (!encoding || !ctx.res.body) {
-      return;
-    }
-    const stream = new CompressionStream(encoding);
-    ctx.res = new Response(ctx.res.body.pipeThrough(stream), ctx.res);
-    ctx.res.headers.delete("Content-Length");
-    ctx.res.headers.set("Content-Encoding", encoding);
-  }, "compress2");
-}, "compress");
-var shouldCompress = /* @__PURE__ */ __name((res) => {
-  const type = res.headers.get("Content-Type");
-  return type && COMPRESSIBLE_CONTENT_TYPE_REGEX.test(type);
-}, "shouldCompress");
-var shouldTransform = /* @__PURE__ */ __name((res) => {
-  const cacheControl = res.headers.get("Cache-Control");
-  return !cacheControl || !cacheControlNoTransformRegExp.test(cacheControl);
-}, "shouldTransform");
-
 // node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/middleware/context-storage/index.js
 import { AsyncLocalStorage } from "node:async_hooks";
 var asyncLocalStorage = new AsyncLocalStorage();
+var contextStorage = /* @__PURE__ */ __name(() => {
+  return /* @__PURE__ */ __name(async function contextStorage2(c, next) {
+    await asyncLocalStorage.run(c, next);
+  }, "contextStorage2");
+}, "contextStorage");
 var getContext = /* @__PURE__ */ __name(() => {
   const context2 = asyncLocalStorage.getStore();
   if (!context2) {
@@ -3439,7 +3410,7 @@ var getFFmpeg = /* @__PURE__ */ __name(async () => {
 }, "getFFmpeg");
 var makeRequestToFFmpeg = /* @__PURE__ */ __name(async (path, method = "POST", body) => {
   const container = await getFFmpeg();
-  const req = new Request(path, {
+  const req = new Request(new URL(path, "http://example.com"), {
     method,
     body
   });
@@ -3454,7 +3425,17 @@ var getFileInfo = /* @__PURE__ */ __name(async (file) => {
   const data = await resp.json();
   return data;
 }, "getFileInfo");
-var file_info_default = new Hono2().post("/", async (c) => {
+var file_info_default = new Hono2().get("/", async (c) => {
+  const url = c.req.query("url") || "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
+  const file = await fetch(url).then((res) => res.arrayBuffer());
+  const start = performance.now();
+  const fileObj = new File([file], "video.mp4", { type: "video/mp4" });
+  const info3 = await getFileInfo(fileObj);
+  return c.json({
+    ...info3,
+    time: performance.now() - start
+  });
+}).post("/", async (c) => {
   const body = await c.req.parseBody();
   const file = body.file;
   let start = performance.now();
@@ -4318,7 +4299,6 @@ var resizeImage = /* @__PURE__ */ __name(async (props) => {
   let height = originalHeight;
   const mode = props.mode || "fit";
   const quality = props.quality ?? (props.width != null || props.height != null ? 65 : 75);
-  console.log("Quality calculation:", props.quality, "width:", props.width, "height:", props.height, "final quality:", quality);
   const format = props.format || "jpeg";
   if (props.width == null && props.height == null && (originalWidth > 1200 || originalHeight > 1200)) {
     const maxDimension = 1200;
@@ -4329,35 +4309,15 @@ var resizeImage = /* @__PURE__ */ __name(async (props) => {
       height = maxDimension;
       width = Math.round(maxDimension * originalWidth / originalHeight);
     }
-    console.log(`Resized large image from ${originalWidth}x${originalHeight} to ${width}x${height}`);
   }
-  console.log({
-    mode,
-    quality,
-    format,
-    originalWidth,
-    originalHeight,
-    targetWidth: props.width,
-    targetHeight: props.height,
-    getNumberWidth: getNumber(props.width),
-    getNumberHeight: getNumber(props.height)
-  });
-  console.log("Final dimensions before resize:", width, "x", height);
-  console.log("Condition 1 (height only):", getNumber(props.height) !== null && getNumber(props.width) === null);
-  console.log("Condition 2 (width only):", getNumber(props.width) !== null && getNumber(props.height) === null);
-  console.log("Condition 3 (both):", getNumber(props.width) !== null && getNumber(props.height) !== null);
   if (getNumber(props.height) !== null && getNumber(props.width) === null) {
     height = getNumber(props.height);
     const aspectRatio = originalWidth / originalHeight;
     width = Math.round(height * aspectRatio);
   } else if (getNumber(props.width) !== null && getNumber(props.height) === null) {
-    console.log("Entering width-only branch");
     width = getNumber(props.width);
-    console.log("Width set to:", width);
     const aspectRatio = originalHeight / originalWidth;
-    console.log("Aspect ratio:", aspectRatio);
     height = Math.round(width * aspectRatio);
-    console.log("Height calculated as:", height);
   } else if (getNumber(props.width) !== null && getNumber(props.height) !== null) {
     const targetWidth = getNumber(props.width);
     const targetHeight = getNumber(props.height);
@@ -4379,7 +4339,6 @@ var resizeImage = /* @__PURE__ */ __name(async (props) => {
     }
   }
   try {
-    console.log("About to resize to:", width, "x", height);
     const outputImage = resize(inputImage, width, height, SamplingFilter.Lanczos3);
     let outputBytes;
     let mimeType;
@@ -4411,9 +4370,6 @@ var resizeImage = /* @__PURE__ */ __name(async (props) => {
     const nameWithoutExt = originalName.replace(/\.[^/.]+$/, "");
     const newFileName = nameWithoutExt + extension;
     const compressedFile = new File([outputBytes], newFileName, { type: mimeType });
-    console.log(`Original: ${(props.file.size / 1024).toFixed(2)} KB`);
-    console.log(`Compressed: ${(compressedFile.size / 1024).toFixed(2)} KB`);
-    console.log(`Reduction: ${((props.file.size - compressedFile.size) / props.file.size * 100).toFixed(1)}%`);
     return compressedFile;
   } catch (err) {
     console.log("err", err);
@@ -4462,8 +4418,28 @@ var resize_image_default = new Hono2().get("/", async (c) => {
   }
 });
 
+// src/routes/thumbnail.ts
+var thumbnail_default = new Hono2().get("/", async (c) => {
+  const url = c.req.query("url") || "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
+  const file = await fetch(url).then((res) => res.arrayBuffer());
+  const start = performance.now();
+  const fileObj = new File([file], "video.mp4", { type: "video/mp4" });
+  const formData = new FormData();
+  formData.append("file", fileObj);
+  const resp = await makeRequestToFFmpeg("/thumbnail", "POST", formData);
+  return resp;
+}).post("/", async (c) => {
+  const body = await c.req.formData();
+  const formData = new FormData();
+  body.forEach((value, key) => {
+    formData.append(key, value);
+  });
+  const resp = await makeRequestToFFmpeg("/thumbnail", "POST", formData);
+  return resp;
+});
+
 // src/routes/index.ts
-var routes_default = new Hono2().use(compress()).route("/image/resize", resize_image_default).route("/info", file_info_default).get("/health", async (c) => {
+var routes_default = new Hono2().use(contextStorage()).route("/image/resize", resize_image_default).route("/info", file_info_default).route("/thumbnail", thumbnail_default).get("/health", async (c) => {
   return c.text("OK");
 });
 

@@ -21,10 +21,10 @@
     "id": "media-container",
     "name": "media-media-container-rahulkumar",
     "className": "FFMPEGContainer",
-    "maxInstances": 10,
-    "instanceType": "lite",
+    "maxInstances": 50,
+    "instanceType": "basic",
     "sqlite": true,
-    "dev": false,
+    "dev": true,
     "image": {
       "Symbol(alchemy::ResourceKind)": "docker::Image",
       "Symbol(alchemy::ResourceID)": "media-container",
@@ -33,31 +33,16 @@
         "@scope": null
       },
       "Symbol(alchemy::ResourceSeq)": 0,
-      "name": "af4f5ea7519fbdb822be15800cce94f1/media-media-container-rahulkumar",
-      "tag": "latest-1762927653888",
+      "name": "cloudflare-dev/media-media-container-rahulkumar",
+      "tag": "latest-1762962660631",
       "build": {
-        "platform": "linux/amd64",
         "context": "./ffmpeg"
       },
-      "registry": {
-        "server": "registry.cloudflare.com",
-        "username": "v1",
-        "password": {
-          "@secret": {
-            "version": "v1",
-            "ciphertext": "jY8hG0xGDMzl3KQlLvM7RsMXAJs8JsGndeDtsF6z1uRqTpr2dqZ+klMLUfpMa8fIibpT+f0djJxGDk11uustAYKX21MmFnIPOolvcB1fh64pWa9xqUgDYVUa3s+Ej/ynk78LdpjtXL1sZcsEJlP7wijI6/RlwpE5ztpd0Z8N3P9rXr0LQLiwt8xCPy0rny5t/oMEOHZ0iH1UP2z/8ieByxmj9cjsOMaqjBeJ9mqs5z4utll9jn32HAXycIDU0qhfcwM7ckKMIa6trIXAhbiVqD12XfKrtah/O/bFcEFabK2x86rvQ7UBWWnOj3fyZYDnyypls3eU3S1klct49PwRzJgydc498YqHLa+IEOjcoz3wxrpZDBE93lorO5iXXJUtM1l6tjnNw5dQwoCNmgxtfdZtxZVcX963JVBKHPziIR+k/hpYmO1NTg9czYHjOoLby5soiGTt86+3hMIwABr/W3vVDMw4KXxULZHIJBtyRyWQHzgxWXHRfanSXtZ95B07",
-            "iv": "+HbxTfiKM6Rkc+ZS",
-            "salt": "cOU8SbpKyiYAesE7v2sWng==",
-            "tag": "wzDaRBJvQiY8KxyhIQJm0g=="
-          }
-        }
-      },
-      "imageRef": "registry.cloudflare.com/af4f5ea7519fbdb822be15800cce94f1/media-media-container-rahulkumar:latest-1762927653888",
-      "repoDigest": "registry.cloudflare.com/af4f5ea7519fbdb822be15800cce94f1/media-media-container-rahulkumar@sha256:2df4c2f3fa317c144667c33c8b96bfbeb8505178b36e1ac05828b400b93b107e",
-      "builtAt": 1762927667853
+      "imageRef": "cloudflare-dev/media-media-container-rahulkumar:latest-1762962660631",
+      "builtAt": 1762962665704
     },
     "durableObjects": {
-      "namespaceId": "4add50429e244c21894dac1988cc26dd"
+      "namespaceId": "media-container"
     }
   }
 }

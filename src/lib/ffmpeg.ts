@@ -9,7 +9,7 @@ const getFFmpeg = async () => {
 
 export const makeRequestToFFmpeg = async (path: string, method: string = "POST", body?: BodyInit) => {
 	const container = await getFFmpeg();
-	const req = new Request(path, {
+	const req = new Request(new URL(path, "http://example.com"), {
 		method,
 		body,
 	});

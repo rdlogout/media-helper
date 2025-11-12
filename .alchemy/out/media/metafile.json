@@ -1396,58 +1396,6 @@
       ],
       "format": "esm"
     },
-    "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/utils/compress.js": {
-      "bytes": 722,
-      "imports": [
-        {
-          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-console",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/@cloudflare+unenv-preset@2.7.7_unenv@2.0.0-rc.21_workerd@1.20251105.0/node_modules/@cloudflare/unenv-preset/dist/runtime/polyfill/performance.mjs",
-          "kind": "import-statement",
-          "external": true
-        }
-      ],
-      "format": "esm"
-    },
-    "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/middleware/compress/index.js": {
-      "bytes": 1483,
-      "imports": [
-        {
-          "path": "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/utils/compress.js",
-          "kind": "import-statement",
-          "original": "../../utils/compress.js"
-        },
-        {
-          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-console",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/@cloudflare+unenv-preset@2.7.7_unenv@2.0.0-rc.21_workerd@1.20251105.0/node_modules/@cloudflare/unenv-preset/dist/runtime/polyfill/performance.mjs",
-          "kind": "import-statement",
-          "external": true
-        },
-        {
-          "path": "<runtime>",
-          "kind": "import-statement",
-          "external": true
-        }
-      ],
-      "format": "esm"
-    },
     "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/middleware/context-storage/index.js": {
       "bytes": 484,
       "imports": [
@@ -1480,7 +1428,7 @@
       "format": "esm"
     },
     "src/lib/ffmpeg.ts": {
-      "bytes": 495,
+      "bytes": 526,
       "imports": [
         {
           "path": "node_modules/.pnpm/@cloudflare+containers@0.0.30/node_modules/@cloudflare/containers/dist/index.js",
@@ -1516,7 +1464,7 @@
       "format": "esm"
     },
     "src/routes/file-info.ts": {
-      "bytes": 724,
+      "bytes": 1206,
       "imports": [
         {
           "path": "src/lib/ffmpeg.ts",
@@ -1671,7 +1619,7 @@
       "format": "esm"
     },
     "src/routes/resize-image.ts": {
-      "bytes": 7726,
+      "bytes": 7804,
       "imports": [
         {
           "path": "src/lib/photon.ts",
@@ -1706,8 +1654,39 @@
       ],
       "format": "esm"
     },
+    "src/routes/thumbnail.ts": {
+      "bytes": 1178,
+      "imports": [
+        {
+          "path": "src/lib/ffmpeg.ts",
+          "kind": "import-statement",
+          "original": "@/lib/ffmpeg"
+        },
+        {
+          "path": "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/index.js",
+          "kind": "import-statement",
+          "original": "hono"
+        },
+        {
+          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-console",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/@cloudflare+unenv-preset@2.7.7_unenv@2.0.0-rc.21_workerd@1.20251105.0/node_modules/@cloudflare/unenv-preset/dist/runtime/polyfill/performance.mjs",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
     "src/routes/index.ts": {
-      "bytes": 319,
+      "bytes": 429,
       "imports": [
         {
           "path": "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/index.js",
@@ -1715,9 +1694,9 @@
           "original": "hono"
         },
         {
-          "path": "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/middleware/compress/index.js",
+          "path": "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/middleware/context-storage/index.js",
           "kind": "import-statement",
-          "original": "hono/compress"
+          "original": "hono/context-storage"
         },
         {
           "path": "src/routes/file-info.ts",
@@ -1728,6 +1707,11 @@
           "path": "src/routes/resize-image.ts",
           "kind": "import-statement",
           "original": "./resize-image"
+        },
+        {
+          "path": "src/routes/thumbnail.ts",
+          "kind": "import-statement",
+          "original": "./thumbnail"
         },
         {
           "path": "/Users/rahulkumar/Documents/media-helper/node_modules/.pnpm/alchemy@0.77.0_workerd@1.20251105.0_wrangler@4.46.0_@cloudflare+workers-types@4.20251109.0_/node_modules/alchemy/lib/cloudflare/bundle/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process",
@@ -1789,7 +1773,7 @@
       "imports": [],
       "exports": [],
       "inputs": {},
-      "bytes": 340123
+      "bytes": 338911
     },
     ".alchemy/out/media/index.js": {
       "imports": [
@@ -1939,20 +1923,14 @@
         "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/hono.js": {
           "bytesInOutput": 247
         },
-        "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/utils/compress.js": {
-          "bytesInOutput": 651
-        },
-        "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/middleware/compress/index.js": {
-          "bytesInOutput": 1509
-        },
         "node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/middleware/context-storage/index.js": {
-          "bytesInOutput": 309
+          "bytesInOutput": 524
         },
         "src/lib/ffmpeg.ts": {
-          "bytesInOutput": 415
+          "bytesInOutput": 446
         },
         "src/routes/file-info.ts": {
-          "bytesInOutput": 603
+          "bytesInOutput": 1045
         },
         "node_modules/.pnpm/@cf-wasm+internals@0.1.0/node_modules/@cf-wasm/internals/dist/polyfills/image-data.js": {
           "bytesInOutput": 4984
@@ -1967,16 +1945,19 @@
           "bytesInOutput": 0
         },
         "src/routes/resize-image.ts": {
-          "bytesInOutput": 6666
+          "bytesInOutput": 5277
+        },
+        "src/routes/thumbnail.ts": {
+          "bytesInOutput": 784
         },
         "src/routes/index.ts": {
-          "bytesInOutput": 185
+          "bytesInOutput": 230
         },
         "src/index.ts": {
           "bytesInOutput": 279
         }
       },
-      "bytes": 145678
+      "bytes": 143511
     }
   }
 }

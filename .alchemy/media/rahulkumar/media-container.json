@@ -13,48 +13,19 @@
       "@scope": null
     },
     "Symbol(alchemy::ResourceSeq)": 0,
-    "name": "af4f5ea7519fbdb822be15800cce94f1/media-media-container-rahulkumar",
-    "tag": "latest-1762927653888",
+    "name": "cloudflare-dev/media-media-container-rahulkumar",
+    "tag": "latest-1762962660631",
     "build": {
-      "platform": "linux/amd64",
       "context": "./ffmpeg"
     },
-    "registry": {
-      "server": "registry.cloudflare.com",
-      "username": "v1",
-      "password": {
-        "@secret": {
-          "version": "v1",
-          "ciphertext": "cSwbZX/G4NAs2ZF6d/GLUroMh9X0uX9WGi0nRlD7ZXiJHnSvoHMHNXhX+4ROrZIzOS/FOJs0cOAnnoR59Ko5g640u3fqZG37MsixNYx2LXJSmqIFpZGZb90FF3xfwJXcDaPa3YvEd2/ybbLS7/VDl9dvMBJJasEt4m95n5F0zLXZBjhQMeoW3njuvtBXlmBciOP2SGnHNffuz4DJkJ1Z1t47se+xZL+QYnrHisvuxm8NccGjMgGo6hEHElhSSujE5iZJG4MC2nG1J4ivDb8R34XNdTVdu/bTAYoKyYOMnTDFkBrqj4lKHpXbC94J0ORz1ZjwKS6pi1d+YB+Venw2lgqEUdbMMytz2AaNNu+xK/47h5hPhR+5kCbrrPnKvEgj1aCWyFdhCt3MBBLDAbL/sf8WptC+SwP3AcNRs2Zyd3dRwsQ3kyT7G+WgmsO6ITQy66bE0Gmy7bVh5qpI4qY1TH7ardawp8dCDT8omYbUHXv9OEaiPmUBD74g7/dM2so+",
-          "iv": "YknbS1/BoHoxHTZn",
-          "salt": "S5yy/f979zhMNPchwx1Xjg==",
-          "tag": "LMjSEhtvIbHKkhw5usIMWA=="
-        }
-      }
-    },
-    "imageRef": "registry.cloudflare.com/af4f5ea7519fbdb822be15800cce94f1/media-media-container-rahulkumar:latest-1762927653888",
-    "repoDigest": "registry.cloudflare.com/af4f5ea7519fbdb822be15800cce94f1/media-media-container-rahulkumar@sha256:2df4c2f3fa317c144667c33c8b96bfbeb8505178b36e1ac05828b400b93b107e",
-    "builtAt": 1762927667853
+    "imageRef": "cloudflare-dev/media-media-container-rahulkumar:latest-1762962660631",
+    "builtAt": 1762962665704
   },
   "props": {
-    "name": "af4f5ea7519fbdb822be15800cce94f1/media-media-container-rahulkumar",
-    "tag": "latest-1762927653888",
+    "name": "cloudflare-dev/media-media-container-rahulkumar",
+    "tag": "latest-1762962660631",
     "build": {
-      "platform": "linux/amd64",
       "context": "./ffmpeg"
-    },
-    "registry": {
-      "server": "registry.cloudflare.com",
-      "username": "v1",
-      "password": {
-        "@secret": {
-          "version": "v1",
-          "ciphertext": "sv9uxr4F4PyPiqlhiFfyTneETeFSD2vuvbL6KIQq12XBEVR43z1oxMs/L4DS4E9EaNXP31HjwR82lvJjY5rSI8DqoJb054uGWM1lwbZnh0HdSiiJMUFOHG3NI1Sy3LrRIc1P6PiF2lFB8AMTXQXRa2x9ecA/YMfkrCwdGHnNqxCNPhAIOrvWbV0/YyYYTV5vBYmvBSDW0lEjkWQlN9JpVt8E8UHFLZKXCSSzCSV71ylPhhMgODQSna5D9NUgAL2yGp51ajQVwLzNwZQkTCn/tie5wrmVtZiCxt6VGI/gykJlz20GH1YLBtoLB4dN59anTz3okLGhqTAvw3b7IISi3wYQ/pJCmxhkSG2XKdIte44k/AwEnZD2X/K7GNKi/4IO18iaGVZr+mSo/RkrMm3fzfrICPEKUvXYz9gmtu8BDeOdfIGSqPjdiay47ab0b9DCSR3AGHdmvreWvmd2DqtPPMsY5mvas59kJzXY6TS1m/KLi6bpeiBRcd/ugnq/IBwP",
-          "iv": "DEhsj6nDWcqVHDgP",
-          "salt": "63VbREUfTPzkq/UWIqoSSg==",
-          "tag": "IV+s7pra2NTg8c0wupo+1A=="
-        }
-      }
     }
   }
 }

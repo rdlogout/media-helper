@@ -22,8 +22,8 @@
         "id": "media-container",
         "name": "media-media-container-rahulkumar",
         "className": "FFMPEGContainer",
-        "maxInstances": 10,
-        "instanceType": "lite",
+        "maxInstances": 50,
+        "instanceType": "basic",
         "sqlite": true,
         "image": {
           "Symbol(alchemy::ResourceKind)": "docker::Image",
@@ -33,28 +33,13 @@
             "@scope": null
           },
           "Symbol(alchemy::ResourceSeq)": 0,
-          "name": "af4f5ea7519fbdb822be15800cce94f1/media-media-container-rahulkumar",
-          "tag": "latest-1762927653888",
+          "name": "cloudflare-dev/media-media-container-rahulkumar",
+          "tag": "latest-1762962660631",
           "build": {
-            "platform": "linux/amd64",
             "context": "./ffmpeg"
           },
-          "registry": {
-            "server": "registry.cloudflare.com",
-            "username": "v1",
-            "password": {
-              "@secret": {
-                "version": "v1",
-                "ciphertext": "UumDprSeKgKEntOPVEit70exSyizRRMFX4RfJFXEoJCxbCD4LBh+FWXy1mFmOP1252UmCHFHcxJWs7HG5JkufF38iKGgcO8FGiuKlDT7+aE0IuWq5sZOwhGONBTgB849WnM1iUif+uYTd7xS10zxuZQTKKqgTwpYaMEe9K74rEMsC741VJdKaBYteemhds3NaSj0SU534ILMqx9GMvICdm2zw2vHkyVoLCkJTT6qgl/0+DnAtYofLnlrorWodJ7eVofiOTtezJoVXfsxq+sum54OY3F9PS+Nk+S6bCCqHQ60tCxm+dbyTcOWJnmU/BOkWHCK5TdedQtn/fm3go92R3fvT26VAxGfHB69ZSv8Xcg4ZEn4wYRC1eb2XUUkg8F0oI+ENhbVVQJ+XY/6ImYtJKNgi7R+sUOiZQIVnCTHE0JTzAxhnqMGzHgfCrzI9q1z7eW/Vk9YO+Zgdto2lZ4rR51tI0+Aiob8izXsF733ZBdfp+a9EohnwlLgHA1QJExC",
-                "iv": "/hLmq2ZNF6iGQoeW",
-                "salt": "EEL1wZoYOzikx2c5wujTqQ==",
-                "tag": "wvhi1JWqAdjAbN6uoJLPew=="
-              }
-            }
-          },
-          "imageRef": "registry.cloudflare.com/af4f5ea7519fbdb822be15800cce94f1/media-media-container-rahulkumar:latest-1762927653888",
-          "repoDigest": "registry.cloudflare.com/af4f5ea7519fbdb822be15800cce94f1/media-media-container-rahulkumar@sha256:2df4c2f3fa317c144667c33c8b96bfbeb8505178b36e1ac05828b400b93b107e",
-          "builtAt": 1762927667853
+          "imageRef": "cloudflare-dev/media-media-container-rahulkumar:latest-1762962660631",
+          "builtAt": 1762962665704
         }
       }
     },
@@ -76,10 +61,10 @@
     "createdAt": {
       "@date": "2025-11-11T06:34:10.415Z"
     },
-    "updatedAt": {
-      "@date": "2025-11-12T06:08:01.989Z"
-    },
-    "url": "https://media.base15log.workers.dev"
+    "updatedAt": 1762962666605,
+    "url": "http://localhost:8788/",
+    "routes": [],
+    "domains": []
   },
   "props": {
     "name": "media",
@@ -91,8 +76,8 @@
         "id": "media-container",
         "name": "media-media-container-rahulkumar",
         "className": "FFMPEGContainer",
-        "maxInstances": 10,
-        "instanceType": "lite",
+        "maxInstances": 50,
+        "instanceType": "basic",
         "sqlite": true,
         "image": {
           "Symbol(alchemy::ResourceKind)": "docker::Image",
@@ -102,28 +87,13 @@
             "@scope": null
           },
           "Symbol(alchemy::ResourceSeq)": 0,
-          "name": "af4f5ea7519fbdb822be15800cce94f1/media-media-container-rahulkumar",
-          "tag": "latest-1762927653888",
+          "name": "cloudflare-dev/media-media-container-rahulkumar",
+          "tag": "latest-1762962660631",
           "build": {
-            "platform": "linux/amd64",
             "context": "./ffmpeg"
           },
-          "registry": {
-            "server": "registry.cloudflare.com",
-            "username": "v1",
-            "password": {
-              "@secret": {
-                "version": "v1",
-                "ciphertext": "wKVq7LoabTth3EmFC63c2VQxCYEBYYy+ZHfB6xojxJbU3U78kkgxpIsmGSAJrCuBqScI1QqlOWPBUgA2/I4Csa+GXaWRWCSZ8QwBkPM+sTaH8meuTiO41jZ33j56kXoWOI3CZxmN5PQ1eK4/u4xH7R0lK8Y3h24G2BCydnWvHG9tKBiZfMqSjklFgbgPJSEgBFJx25gN+mBX6qaBsTyXf+IjRDoKMCRLT49FtXvLR8h2z/gwQI/MlfSEwk34j6jFiyi1liAmINiCJcPGKwYa8I5fazlxZehuVbr41hL0pisjPqoCKaH8hFZBb8axApVgYkWSqV9jiqS3rT2qXd6nzczlfQqnQp0gsdkFr27CrJQVzyX2kJVdkGyxpPhiDorN2+fzDI1NmP2U4Yhn4mNPxBvmqFyqSueNq9Ee21jvWTQP7obgp182b1ZnF9UTm0QwI+nv3SApAh47dORNW4Ry3nlDZMzV2I538KyZJ5paKtNcTRkTPCs9sLafAukq5A56",
-                "iv": "IG5UaLjnmrSzfH5U",
-                "salt": "gO4EK2X+rBLTmnBYxXuO6Q==",
-                "tag": "BzathKD70hGsuzeizucsCA=="
-              }
-            }
-          },
-          "imageRef": "registry.cloudflare.com/af4f5ea7519fbdb822be15800cce94f1/media-media-container-rahulkumar:latest-1762927653888",
-          "repoDigest": "registry.cloudflare.com/af4f5ea7519fbdb822be15800cce94f1/media-media-container-rahulkumar@sha256:2df4c2f3fa317c144667c33c8b96bfbeb8505178b36e1ac05828b400b93b107e",
-          "builtAt": 1762927667853
+          "imageRef": "cloudflare-dev/media-media-container-rahulkumar:latest-1762962660631",
+          "builtAt": 1762962665704
         }
       }
     },

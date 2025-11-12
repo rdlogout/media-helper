@@ -1,4 +1,3 @@
-import { Context, Hono } from "hono";
 import { unlink } from "node:fs/promises";
 
 export const getThumbnail = async (body: FormData): Promise<File> => {
@@ -7,7 +6,7 @@ export const getThumbnail = async (body: FormData): Promise<File> => {
 	const width = body.get("width")?.toString() || "200";
 	const duration = body.get("duration")?.toString() || "0";
 	const quality = body.get("quality")?.toString() || "80";
-	const format = body.get("format")?.toString() || "webp"; // webp, jpg, png, avif, etc.
+	const format = body.get("format")?.toString() || "avif"; // avif, webp, jpg, png, etc.
 
 	const tmpInputFile = `/tmp/thumbnail-input-${Date.now()}`;
 	await Bun.write(tmpInputFile, file);
@@ -26,13 +25,13 @@ export const getThumbnail = async (body: FormData): Promise<File> => {
 				"-vf",
 				`scale=${width}:${height}:force_original_aspect_ratio=decrease`,
 				"-c:v",
-				format === "webp" ? "libwebp" : format,
+				format === "webp" ? "libwebp" : format === "avif" ? "libaom-av1" : format,
 				"-q:v",
 				quality,
 				"-y",
 				tmpOutputFile,
 		  ]
-		: ["-i", tmpInputFile, "-vf", `scale=${width}:${height}`, "-c:v", format === "webp" ? "libwebp" : format, "-q:v", quality, "-y", tmpOutputFile];
+		: ["-i", tmpInputFile, "-vf", `scale=${width}:${height}`, "-c:v", format === "webp" ? "libwebp" : format === "avif" ? "libaom-av1" : format, "-q:v", quality, "-y", tmpOutputFile];
 
 	const proc = Bun.spawn(["ffmpeg", ...ffmpegArgs]);
 	await proc.exited;

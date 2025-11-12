@@ -18,6 +18,6 @@
   "props": {
     "scriptName": "media",
     "retain": false,
-    "dev": false
+    "dev": true
   }
 }

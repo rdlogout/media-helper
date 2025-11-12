@@ -7,8 +7,8 @@ const app = await alchemy(name, {
 
 const FFMPEG = await Container("media-container", {
 	className: "FFMPEGContainer",
-	instanceType: "lite",
-	maxInstances: 10,
+	instanceType: "basic",
+	maxInstances: 50,
 	build: {
 		context: "./ffmpeg",
 	},
