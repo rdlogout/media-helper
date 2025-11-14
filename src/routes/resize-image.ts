@@ -11,7 +11,6 @@ type Props = {
 	mode?: "cover" | "contain";
 	size?: string;
 };
-const imageUrl = "https://avatars.githubusercontent.com/u/314135";
 const getNumber = (value: number | string | null | undefined) => {
 	if (value === null || value === undefined) {
 		return null;
@@ -21,11 +20,12 @@ const getNumber = (value: number | string | null | undefined) => {
 };
 
 const resizeImage = async (props: Props) => {
+	console.log(props);
 	const inputBytes = await props.file.arrayBuffer();
 	const inputImage = PhotonImage.new_from_byteslice(new Uint8Array(inputBytes));
 	const originalWidth = inputImage.get_width();
 	const originalHeight = inputImage.get_height();
-
+	console.log("paresed");
 	let width = originalWidth;
 	let height = originalHeight;
 
@@ -166,9 +166,21 @@ const resizeImage = async (props: Props) => {
 		return props.file;
 	}
 };
+const imageUrl = "https://i.ytimg.com/vi/xtJA_3kH4Qg/hqdefault.jpg";
 
 export default new Hono()
+	.get("/test", async (c) => {
+		console.log(c.env);
+		const stream = await fetch(imageUrl).then((res) => res.body);
+		console.log(stream);
+		const response = (await c.env.IMAGES.input(stream).transform({ rotate: 90 }).transform({ width: 128 }).transform({ blur: 20 }).output({ format: "image/avif" })).response();
+		return response;
+	})
 	.get("/", async (c) => {
+		const imgUrl = c.req.query("url") || c.req.query("img") || imageUrl;
+		const width = c.req.query("width");
+		const height = c.req.query("height");
+
 		const cacheUrl = c.req.url;
 		const cacheKey = new Request(cacheUrl.toString());
 		const cache = caches.default;
@@ -180,25 +192,9 @@ export default new Hono()
 			});
 		}
 
-		const url = new URL(c.req.url);
-		const imgUrl = c.req.query("url") || c.req.query("img") || imageUrl;
-		const inputBytes = await fetch(imgUrl)
-			.then((res) => res.arrayBuffer())
-			.then((buffer) => new Uint8Array(buffer));
-		const quality = Number(url.searchParams.get("quality")) || undefined; // Let resizeImage handle default quality
-		const size = url.searchParams.get("size");
-		const height = url.searchParams.get("height") || size;
-		const width = url.searchParams.get("width") || size;
+		const stream = await fetch(imgUrl).then((res) => res.body);
 
-		const file = await resizeImage({ file: new File([inputBytes], "image.jpg"), width, height, quality });
-
-		const response = new Response(file.stream(), {
-			headers: {
-				"Content-Type": file.type,
-				"Cache-Control": "max-age=604800",
-				ETag: file.name,
-			},
-		});
+		const response = (await c.env.IMAGES.input(stream).transform({ width, height }).output({ format: "image/avif" })).response();
 
 		c.executionCtx.waitUntil(cache.put(cacheKey, response.clone()));
 

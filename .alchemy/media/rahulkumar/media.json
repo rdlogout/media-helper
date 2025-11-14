@@ -34,12 +34,18 @@
           },
           "Symbol(alchemy::ResourceSeq)": 0,
           "name": "cloudflare-dev/media-media-container-rahulkumar",
-          "tag": "latest-1762962660631",
+          "tag": "latest-1763084424012",
           "build": {
-            "context": "./ffmpeg"
+            "context": "./go"
           },
-          "imageRef": "cloudflare-dev/media-media-container-rahulkumar:latest-1762962660631",
-          "builtAt": 1762962665704
+          "imageRef": "cloudflare-dev/media-media-container-rahulkumar:latest-1763084424012",
+          "builtAt": 1763084424882
+        }
+      },
+      "IMAGES": {
+        "type": "images",
+        "dev": {
+          "remote": true
         }
       }
     },
@@ -61,8 +67,8 @@
     "createdAt": {
       "@date": "2025-11-11T06:34:10.415Z"
     },
-    "updatedAt": 1762962666605,
-    "url": "http://localhost:8788/",
+    "updatedAt": 1763084431216,
+    "url": "http://localhost:8787/",
     "routes": [],
     "domains": []
   },
@@ -88,12 +94,18 @@
           },
           "Symbol(alchemy::ResourceSeq)": 0,
           "name": "cloudflare-dev/media-media-container-rahulkumar",
-          "tag": "latest-1762962660631",
+          "tag": "latest-1763084424012",
           "build": {
-            "context": "./ffmpeg"
+            "context": "./go"
           },
-          "imageRef": "cloudflare-dev/media-media-container-rahulkumar:latest-1762962660631",
-          "builtAt": 1762962665704
+          "imageRef": "cloudflare-dev/media-media-container-rahulkumar:latest-1763084424012",
+          "builtAt": 1763084424882
+        }
+      },
+      "IMAGES": {
+        "type": "images",
+        "dev": {
+          "remote": true
         }
       }
     },

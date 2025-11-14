@@ -14,18 +14,18 @@
     },
     "Symbol(alchemy::ResourceSeq)": 0,
     "name": "cloudflare-dev/media-media-container-rahulkumar",
-    "tag": "latest-1762962660631",
+    "tag": "latest-1763084424012",
     "build": {
-      "context": "./ffmpeg"
+      "context": "./go"
     },
-    "imageRef": "cloudflare-dev/media-media-container-rahulkumar:latest-1762962660631",
-    "builtAt": 1762962665704
+    "imageRef": "cloudflare-dev/media-media-container-rahulkumar:latest-1763084424012",
+    "builtAt": 1763084424882
   },
   "props": {
     "name": "cloudflare-dev/media-media-container-rahulkumar",
-    "tag": "latest-1762962660631",
+    "tag": "latest-1763084424012",
     "build": {
-      "context": "./ffmpeg"
+      "context": "./go"
     }
   }
 }

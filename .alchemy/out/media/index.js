@@ -1848,6 +1848,37 @@ async function getRandom(binding2, instances = 3) {
 }
 __name(getRandom, "getRandom");
 
+// node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/middleware/context-storage/index.js
+import { AsyncLocalStorage } from "node:async_hooks";
+var asyncLocalStorage = new AsyncLocalStorage();
+var contextStorage = /* @__PURE__ */ __name(() => {
+  return /* @__PURE__ */ __name(async function contextStorage2(c, next) {
+    await asyncLocalStorage.run(c, next);
+  }, "contextStorage2");
+}, "contextStorage");
+var getContext = /* @__PURE__ */ __name(() => {
+  const context2 = asyncLocalStorage.getStore();
+  if (!context2) {
+    throw new Error("Context is not available");
+  }
+  return context2;
+}, "getContext");
+
+// src/lib/ffmpeg.ts
+var getFFmpeg = /* @__PURE__ */ __name(async () => {
+  const c = getContext();
+  const container = await getRandom(c.env.FFMPEG);
+  return container;
+}, "getFFmpeg");
+var makeRequestToFFmpeg = /* @__PURE__ */ __name(async (path, method = "POST", body) => {
+  const container = await getFFmpeg();
+  const req = new Request(new URL(path, "http://example.com"), {
+    method,
+    body
+  });
+  return container.fetch(req);
+}, "makeRequestToFFmpeg");
+
 // node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/compose.js
 var compose = /* @__PURE__ */ __name((middleware, onError, onNotFound) => {
   return (context2, next) => {
@@ -3386,37 +3417,6 @@ var Hono2 = class extends Hono {
   }
 };
 
-// node_modules/.pnpm/hono@4.10.4/node_modules/hono/dist/middleware/context-storage/index.js
-import { AsyncLocalStorage } from "node:async_hooks";
-var asyncLocalStorage = new AsyncLocalStorage();
-var contextStorage = /* @__PURE__ */ __name(() => {
-  return /* @__PURE__ */ __name(async function contextStorage2(c, next) {
-    await asyncLocalStorage.run(c, next);
-  }, "contextStorage2");
-}, "contextStorage");
-var getContext = /* @__PURE__ */ __name(() => {
-  const context2 = asyncLocalStorage.getStore();
-  if (!context2) {
-    throw new Error("Context is not available");
-  }
-  return context2;
-}, "getContext");
-
-// src/lib/ffmpeg.ts
-var getFFmpeg = /* @__PURE__ */ __name(async () => {
-  const c = getContext();
-  const container = await getRandom(c.env.FFMPEG);
-  return container;
-}, "getFFmpeg");
-var makeRequestToFFmpeg = /* @__PURE__ */ __name(async (path, method = "POST", body) => {
-  const container = await getFFmpeg();
-  const req = new Request(new URL(path, "http://example.com"), {
-    method,
-    body
-  });
-  return container.fetch(req);
-}, "makeRequestToFFmpeg");
-
 // src/routes/file-info.ts
 var getFileInfo = /* @__PURE__ */ __name(async (file) => {
   const formData = new FormData();
@@ -4282,7 +4282,6 @@ import photonWasmModule from "lib/photon_rs_bg.wasm";
 initPhoton.sync({ module: photonWasmModule });
 
 // src/routes/resize-image.ts
-var imageUrl = "https://avatars.githubusercontent.com/u/314135";
 var getNumber = /* @__PURE__ */ __name((value) => {
   if (value === null || value === void 0) {
     return null;
@@ -4291,10 +4290,12 @@ var getNumber = /* @__PURE__ */ __name((value) => {
   return Number.isNaN(val) || val <= 0 ? null : val;
 }, "getNumber");
 var resizeImage = /* @__PURE__ */ __name(async (props) => {
+  console.log(props);
   const inputBytes = await props.file.arrayBuffer();
   const inputImage = PhotonImage.new_from_byteslice(new Uint8Array(inputBytes));
   const originalWidth = inputImage.get_width();
   const originalHeight = inputImage.get_height();
+  console.log("paresed");
   let width = originalWidth;
   let height = originalHeight;
   const mode = props.mode || "fit";
@@ -4376,7 +4377,17 @@ var resizeImage = /* @__PURE__ */ __name(async (props) => {
     return props.file;
   }
 }, "resizeImage");
-var resize_image_default = new Hono2().get("/", async (c) => {
+var imageUrl = "https://i.ytimg.com/vi/xtJA_3kH4Qg/hqdefault.jpg";
+var resize_image_default = new Hono2().get("/test", async (c) => {
+  console.log(c.env);
+  const stream = await fetch(imageUrl).then((res) => res.body);
+  console.log(stream);
+  const response = (await c.env.IMAGES.input(stream).transform({ rotate: 90 }).transform({ width: 128 }).transform({ blur: 20 }).output({ format: "image/avif" })).response();
+  return response;
+}).get("/", async (c) => {
+  const imgUrl = c.req.query("url") || c.req.query("img") || imageUrl;
+  const width = c.req.query("width");
+  const height = c.req.query("height");
   const cacheUrl = c.req.url;
   const cacheKey = new Request(cacheUrl.toString());
   const cache = caches.default;
@@ -4386,21 +4397,8 @@ var resize_image_default = new Hono2().get("/", async (c) => {
       headers: cacheResponse.headers
     });
   }
-  const url = new URL(c.req.url);
-  const imgUrl = c.req.query("url") || c.req.query("img") || imageUrl;
-  const inputBytes = await fetch(imgUrl).then((res) => res.arrayBuffer()).then((buffer) => new Uint8Array(buffer));
-  const quality = Number(url.searchParams.get("quality")) || void 0;
-  const size = url.searchParams.get("size");
-  const height = url.searchParams.get("height") || size;
-  const width = url.searchParams.get("width") || size;
-  const file = await resizeImage({ file: new File([inputBytes], "image.jpg"), width, height, quality });
-  const response = new Response(file.stream(), {
-    headers: {
-      "Content-Type": file.type,
-      "Cache-Control": "max-age=604800",
-      ETag: file.name
-    }
-  });
+  const stream = await fetch(imgUrl).then((res) => res.body);
+  const response = (await c.env.IMAGES.input(stream).transform({ width, height }).output({ format: "image/avif" })).response();
   c.executionCtx.waitUntil(cache.put(cacheKey, response.clone()));
   return response;
 }).post("/", async (c) => {
@@ -4439,7 +4437,13 @@ var thumbnail_default = new Hono2().get("/", async (c) => {
 });
 
 // src/routes/index.ts
-var routes_default = new Hono2().use(contextStorage()).route("/image/resize", resize_image_default).route("/info", file_info_default).route("/thumbnail", thumbnail_default).get("/health", async (c) => {
+var routes_default = new Hono2().use(contextStorage()).route("/image/resize", resize_image_default).route("/info", file_info_default).route("/thumbnail", thumbnail_default).get("/test", async (c) => {
+  let start = performance.now();
+  const resp = await makeRequestToFFmpeg("/");
+  const data = await resp.text();
+  return c.json({ data, time: performance.now() - start });
+  return c.text("OK");
+}).get("/health", async (c) => {
   return c.text("OK");
 });
 

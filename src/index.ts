@@ -7,7 +7,9 @@ export class FFMPEGContainer extends Container {
 }
 
 // export default class ImageProxy extends WorkerEntrypoint {
-// 	fetch = routes.fetch;
+// 	fetch(request: Request, env: any) {
+// 		return routes.fetch(request, env, this.ctx);
+// 	}
 // }
 // export d
 export default routes;

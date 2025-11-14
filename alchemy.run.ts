@@ -1,5 +1,5 @@
 import alchemy from "alchemy";
-import { Container, Worker } from "alchemy/cloudflare";
+import { Container, Images, Worker } from "alchemy/cloudflare";
 const name = "media";
 const app = await alchemy(name, {
 	password: "some2",
@@ -10,9 +10,10 @@ const FFMPEG = await Container("media-container", {
 	instanceType: "basic",
 	maxInstances: 50,
 	build: {
-		context: "./ffmpeg",
+		context: "./go",
 	},
 });
+const IMAGES = await Images({ dev: { remote: true } });
 
 const worker = await Worker(name, {
 	name: `${name}`,
@@ -20,6 +21,7 @@ const worker = await Worker(name, {
 	compatibility: "node",
 	bindings: {
 		FFMPEG: FFMPEG,
+		IMAGES,
 	},
 	dev: {
 		port: 8787,
