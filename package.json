@@ -4,6 +4,7 @@
 	"scripts": {
 		"dev": "alchemy dev",
 		"deploy": "alchemy deploy --adopt",
+		"destroy": "alchemy destroy",
 		"cf-typegen": "wrangler types --env-interface CloudflareBindings"
 	},
 	"dependencies": {

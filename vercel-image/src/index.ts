@@ -22,4 +22,11 @@ app.get("/image", async (c) => {
 	});
 });
 
+app.get("/images/:image", async (c) => {
+	const width = c.req.query("width") || 200;
+	const height = c.req.query("height") || 200;
+	const imageUrl = c.req.query("url") || "https://i.ytimg.com/vi/xtJA_3kH4Qg/hqdefault.jpg";
+	return await fetch(imageUrl);
+});
+
 export default app;

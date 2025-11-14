@@ -1,18 +1,10 @@
 import alchemy from "alchemy";
-import { Container, Images, Worker } from "alchemy/cloudflare";
+import { Images, Worker } from "alchemy/cloudflare";
 const name = "media";
 const app = await alchemy(name, {
 	password: "some2",
 });
 
-const FFMPEG = await Container("media-container", {
-	className: "FFMPEGContainer",
-	instanceType: "basic",
-	maxInstances: 50,
-	build: {
-		context: "./go",
-	},
-});
 const IMAGES = await Images({ dev: { remote: true } });
 
 const worker = await Worker(name, {
