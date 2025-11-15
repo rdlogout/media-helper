@@ -14,7 +14,7 @@ app.get("/", async (c) => {
 	const height = c.req.query("height") || 200;
 	const imageUrl = c.req.query("url") || "https://i.ytimg.com/vi/xtJA_3kH4Qg/hqdefault.jpg";
 	const stream = await fetch(imageUrl).then((res) => res.arrayBuffer());
-	const resizedStream = (await sharp(Buffer.from(stream)).resize(Number(width), Number(height)).toBuffer()) as any;
+	const resizedStream = await sharp(Buffer.from(stream)).resize(Number(width), Number(height)).toBuffer();
 	return new Response(resizedStream, {
 		headers: {
 			"Content-Type": "image/jpeg",
@@ -24,9 +24,15 @@ app.get("/", async (c) => {
 
 app.all("/:path", async (c, next) => {
 	const path = c.req.param("path");
-	const body = await c.req.formData();
 	const action = actions[path];
 	if (!action) return c.json({ error: "Invalid action" }, 400);
+	
+	// Only parse form data for POST/PUT/PATCH requests
+	if (c.req.method === "GET" || c.req.method === "HEAD") {
+		return c.json({ error: "Method not allowed" }, 405);
+	}
+	
+	const body = await c.req.formData();
 	const file = body.get("file") as File;
 	if (action === getFileInfo) {
 		const fileInfo = await getFileInfo(file);
