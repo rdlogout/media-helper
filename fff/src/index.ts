@@ -15,7 +15,7 @@ app.get("/image", async (c) => {
 
 	const cacheUrl = c.req.url;
 	const cacheKey = new Request(cacheUrl.toString());
-	const cache = caches.default;
+	const cache = (caches as any)?.default || caches;
 	const cacheResponse = await cache.match(cacheKey);
 
 	if (cacheResponse) {
