@@ -9,32 +9,42 @@ app.get("/", (c) => {
 });
 
 app.get("/image", async (c) => {
-	const width = c.req.query("width") || 200;
-	const height = c.req.query("height") || 200;
+	const width = c.req.query("width") || "200";
+	const height = c.req.query("height") || "200";
 	const imageUrl = c.req.query("url") || "https://i.ytimg.com/vi/xtJA_3kH4Qg/hqdefault.jpg";
 
-	const cacheUrl = c.req.url;
-	const cacheKey = new Request(cacheUrl.toString());
-	const cache = (caches as any)?.default || caches;
-	const cacheResponse = await cache.match(cacheKey);
+	// Check if Cloudflare has cached this (check CF-Cache-Status header from request)
+	const cfCacheStatus = c.req.header("cf-cache-status");
+	console.log("Cloudflare Cache Status:", cfCacheStatus); // HIT, MISS, EXPIRED, etc.
 
-	if (cacheResponse) {
-		return new Response(cacheResponse.body, {
-			headers: cacheResponse.headers,
-			status: 201,
+	try {
+		// Fetch the original image
+		const stream = await fetch(imageUrl).then((res) => {
+			if (!res.ok) throw new Error("Failed to fetch image");
+			return res.arrayBuffer();
 		});
-	}
 
-	const stream = await fetch(imageUrl).then((res) => res.arrayBuffer());
-	const resizedStream = (await sharp(Buffer.from(stream)).resize(Number(width), Number(height)).toBuffer()) as any;
-	const response = new Response(resizedStream, {
-		headers: {
+		// Resize the image
+		const resizedBuffer = await sharp(Buffer.from(stream)).resize(Number(width), Number(height)).jpeg({ quality: 85 }).toBuffer();
+
+		// Set headers to enable Cloudflare caching
+		return c.body(resizedBuffer as any, 200, {
 			"Content-Type": "image/jpeg",
-		},
-	});
-	c.executionCtx.waitUntil(cache.put(cacheKey, response.clone()));
-
-	return response;
+			// Browser cache for 1 hour, Cloudflare cache for 24 hours
+			"Cache-Control": "public, max-age=3600, s-maxage=86400",
+			// Cloudflare-specific: cache for 7 days
+			"CDN-Cache-Control": "max-age=604800",
+			// Vary by query string (width, height, url)
+			Vary: "Accept-Encoding",
+			// Optional: Add ETag for conditional requests
+			ETag: `"${width}-${height}-${Buffer.from(imageUrl).toString("base64").slice(0, 20)}"`,
+			// Optional: Tell Cloudflare this is cacheable
+			"X-Cache-Tag": "resized-image",
+		});
+	} catch (error) {
+		console.error("Error processing image:", error);
+		return c.json({ error: "Failed to process image" }, 500);
+	}
 });
 
 serve(
