@@ -13,7 +13,7 @@ app.get("/image", async (c) => {
 	const height = c.req.query("height") || 200;
 	const imageUrl = c.req.query("url") || "https://i.ytimg.com/vi/xtJA_3kH4Qg/hqdefault.jpg";
 	const stream = await fetch(imageUrl).then((res) => res.arrayBuffer());
-	const resizedStream = await sharp(Buffer.from(stream)).resize(Number(width), Number(height)).toBuffer();
+	const resizedStream = (await sharp(Buffer.from(stream)).resize(Number(width), Number(height)).toBuffer()) as any;
 	return new Response(resizedStream, {
 		headers: {
 			"Content-Type": "image/jpeg",
