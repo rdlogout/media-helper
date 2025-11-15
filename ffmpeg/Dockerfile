@@ -5,15 +5,19 @@
 #   image would break functionality. We therefore use the lightest Bun Alpine images.
 # - Multi-stage build creates a single bundled file to minimize filesystem work at startup.
 # - Production-only install and ffmpeg via apk reduce image size and cold start.
+# - Sharp requires cross-platform installation for proper binary selection.
 
 ############################################
 # deps: install packages with cache-friendly layers
 ############################################
 FROM oven/bun:1-alpine AS deps
 WORKDIR /app
+# Set environment variables for Sharp cross-platform installation
+ENV npm_config_platform=linux
+ENV npm_config_libc=musl
 # Copy only manifests to maximize layer cache hits
 COPY package.json bun.lock ./
-# Install dependencies (lockfile respected); dev deps are minimal here
+# Install dependencies with cross-platform support (lockfile respected)
 RUN bun install
 
 ############################################
@@ -21,6 +25,9 @@ RUN bun install
 ############################################
 FROM oven/bun:1-alpine AS build
 WORKDIR /app
+# Set environment variables for Sharp cross-platform installation
+ENV npm_config_platform=linux
+ENV npm_config_libc=musl
 # Reuse manifests and node_modules from deps stage to avoid network on rebuilds
 COPY package.json bun.lock ./
 COPY --from=deps /app/node_modules /app/node_modules
@@ -30,13 +37,28 @@ COPY tsconfig.json src/ ./
 RUN bun build --target bun --minify --sourcemap=none ./index.ts --outfile server.js
 
 ############################################
-# runtime: minimal Bun Alpine with ffmpeg
+# runtime: minimal Bun Alpine with ffmpeg and Sharp runtime deps
 ############################################
 FROM oven/bun:1-alpine AS runtime
 ENV NODE_ENV=production
 WORKDIR /app
-# Install ffmpeg using apk (Alpine) for smallest footprint
-RUN apk add --no-cache ffmpeg
+# Install ffmpeg and Sharp runtime dependencies using apk (Alpine) for smallest footprint
+# Sharp requires both runtime and development libraries to be available at runtime
+RUN apk add --no-cache \
+    ffmpeg \
+    vips \
+    vips-cpp \
+    vips-dev \
+    glib \
+    glib-dev \
+    expat \
+    expat-dev \
+    giflib \
+    libjpeg-turbo \
+    libpng \
+    libwebp \
+    orc \
+    orc-dev
 
 # Copy only the bundled server for minimal startup I/O
 COPY --from=build /app/server.js ./

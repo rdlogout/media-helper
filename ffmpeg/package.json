@@ -13,6 +13,13 @@
 		"hono": "^4.10.4",
 		"sharp": "^0.34.5"
 	},
+	"pnpm": {
+		"supportedArchitectures": {
+			"os": ["linux", "darwin", "win32"],
+			"cpu": ["x64", "arm64"],
+			"libc": ["glibc", "musl"]
+		}
+	},
 	"devDependencies": {
 		"@types/bun": "latest"
 	}
