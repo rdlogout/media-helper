@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import sharp from "sharp";
 import { getFileInfo } from "./info";
 import { getThumbnail } from "./thumbnail";
 
@@ -8,8 +9,17 @@ const actions = {
 } as any;
 
 const app = new Hono();
-app.get("/", (c) => {
-	return c.text("FFmpeg API");
+app.get("/", async (c) => {
+	const width = c.req.query("width") || 200;
+	const height = c.req.query("height") || 200;
+	const imageUrl = c.req.query("url") || "https://i.ytimg.com/vi/xtJA_3kH4Qg/hqdefault.jpg";
+	const stream = await fetch(imageUrl).then((res) => res.arrayBuffer());
+	const resizedStream = (await sharp(Buffer.from(stream)).resize(Number(width), Number(height)).toBuffer()) as any;
+	return new Response(resizedStream, {
+		headers: {
+			"Content-Type": "image/jpeg",
+		},
+	});
 });
 
 app.all("/:path", async (c, next) => {
