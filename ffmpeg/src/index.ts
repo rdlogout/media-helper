@@ -8,6 +8,9 @@ const actions = {
 } as any;
 
 const app = new Hono();
+app.get("/", (c) => {
+	return c.text("FFmpeg API");
+});
 
 app.all("/:path", async (c, next) => {
 	const path = c.req.param("path");
