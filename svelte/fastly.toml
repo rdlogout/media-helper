@@ -1,0 +1,15 @@
+# This file describes a Fastly Compute package. To learn more visit:
+# https://www.fastly.com/documentation/reference/compute/fastly-toml
+
+authors = [""]
+description = "Starter for Hono"
+language = "javascript"
+manifest_version = 3
+name = "Hono"
+service_id = "vySujQaXemyirejqiBLugr"
+
+[local_server]
+
+[scripts]
+  build = "npm run build"
+  post_init = "npm install"

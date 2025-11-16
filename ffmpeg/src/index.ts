@@ -1,6 +1,6 @@
 import { Hono } from "hono";
-import sharp from "sharp";
 import { getFileInfo } from "./info";
+import resize from "./resize";
 import { getThumbnail } from "./thumbnail";
 
 const actions = {
@@ -9,29 +9,23 @@ const actions = {
 } as any;
 
 const app = new Hono();
-app.get("/", async (c) => {
-	const width = c.req.query("width") || 200;
-	const height = c.req.query("height") || 200;
-	const imageUrl = c.req.query("url") || "https://i.ytimg.com/vi/xtJA_3kH4Qg/hqdefault.jpg";
-	const stream = await fetch(imageUrl).then((res) => res.arrayBuffer());
-	const resizedStream = await sharp(Buffer.from(stream)).resize(Number(width), Number(height)).toBuffer();
-	return new Response(resizedStream, {
-		headers: {
-			"Content-Type": "image/jpeg",
-		},
-	});
+const version = "v1";
+app.get("/", (c) => {
+	return c.json({ message: "Hello World", version });
 });
+
+app.route("/resize", resize);
 
 app.all("/:path", async (c, next) => {
 	const path = c.req.param("path");
 	const action = actions[path];
 	if (!action) return c.json({ error: "Invalid action" }, 400);
-	
+
 	// Only parse form data for POST/PUT/PATCH requests
 	if (c.req.method === "GET" || c.req.method === "HEAD") {
 		return c.json({ error: "Method not allowed" }, 405);
 	}
-	
+
 	const body = await c.req.formData();
 	const file = body.get("file") as File;
 	if (action === getFileInfo) {

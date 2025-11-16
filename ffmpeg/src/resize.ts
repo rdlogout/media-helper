@@ -1,55 +1,69 @@
 import { Hono } from "hono";
+import { etag } from "hono/etag";
+import crypto from "crypto";
+import sharp from "sharp";
+const imageUrl = "https://i.ytimg.com/vi/xtJA_3kH4Qg/hqdefault.jpg";
 
-export default new Hono()
-	.get("/", async (c) => {
-		const cacheUrl = c.req.url;
-		const cacheKey = new Request(cacheUrl.toString());
-		const cache = caches.default;
-		const cacheResponse = await cache.match(cacheKey);
+type Props = {
+	file: File;
+	width?: number | string | null;
+	height?: number | string | null;
+	quality?: number | string | null;
+	format?: string;
+};
 
-		if (cacheResponse) {
-			return new Response(cacheResponse.body, {
-				headers: cacheResponse.headers,
-			});
-		}
+const getNumber = (value: number | string | null | undefined) => {
+	if (value === null || value === undefined) return null;
+	const val = Number(value);
+	return Number.isNaN(val) || val <= 0 ? null : val;
+};
 
-		const url = new URL(c.req.url);
-		const imgUrl = c.req.query("url") || c.req.query("img") || imageUrl;
-		const inputBytes = await fetch(imgUrl)
-			.then((res) => res.arrayBuffer())
-			.then((buffer) => new Uint8Array(buffer));
-		const quality = Number(url.searchParams.get("quality")) || undefined; // Let resizeImage handle default quality
-		const size = url.searchParams.get("size");
-		const height = url.searchParams.get("height") || size;
-		const width = url.searchParams.get("width") || size;
+const resizeImage = async (props: Props) => {
+	const inputBytes = await props.file.arrayBuffer();
+	const metaData = await sharp(Buffer.from(inputBytes)).metadata();
+	const imageWidth = metaData.width || 0;
+	const imageHeight = metaData.height || 0;
+	const aspectRatio = imageWidth / imageHeight;
+	let width = imageWidth;
+	let height = imageHeight;
+	const askedWidth = getNumber(props.width);
+	const askedHeight = getNumber(props.height);
+	if (askedWidth && askedHeight) {
+		width = askedWidth;
+		height = askedHeight;
+	} else if (askedWidth) height = Math.round(askedWidth / aspectRatio);
+	else if (askedHeight) width = Math.round(askedHeight * aspectRatio);
 
-		const file = await resizeImage({ file: new File([inputBytes], "image.jpg"), width, height, quality });
+	const resizedStream = await sharp(Buffer.from(inputBytes)).resize(width, height).avif().toBuffer();
+	return resizedStream;
+};
 
-		const response = new Response(file.stream(), {
+export default new Hono().use("*", etag()).on(["POST", "GET"], "/", async (c) => {
+	const isGet = c.req.method === "GET";
+	const body = isGet ? c.req.query() : await c.req.parseBody();
+
+	let file = body.file as File;
+	const url = body.url as string | null;
+	if (url) file = (await fetch(url).then(async (res) => new File([await res.arrayBuffer()], "image.avif"))) as File;
+	if (!file) return c.json({ error: "Invalid file" }, 400);
+	const format = (body.format as string) || "avif";
+	try {
+		const respFile = await resizeImage({
+			file: file,
+			width: body.width as number | string | null,
+			height: body.height as number | string | null,
+			quality: body.quality as number | string | null,
+			format: format,
+		});
+		return new Response(Buffer.from(respFile), {
+			status: 200,
 			headers: {
-				"Content-Type": file.type,
-				"Cache-Control": "max-age=604800",
-				ETag: file.name,
+				"Content-Type": "image/" + format,
+				"Cache-Control": "public, max-age=604800, s-maxage=86400, stale-while-revalidate=604800",
 			},
 		});
-
-		c.executionCtx.waitUntil(cache.put(cacheKey, response.clone()));
-
-		return response;
-	})
-	.post("/", async (c) => {
-		const formData = await c.req.formData();
-		const file = formData.get("file") as File;
-		// console.log(file);
-		// console.log("file", file?.name, file?.size);
-		if (!file) return c.json({ error: "Invalid file" }, 400);
-		try {
-			const width = Number(formData.get("width")) || 0;
-			const height = Number(formData.get("height")) || 0;
-			const respFile = await resizeImage({ file, width, height });
-			return new Response(respFile.stream());
-		} catch (err) {
-			console.log("err", err);
-			return c.json({ error: "Internal server error" }, 500);
-		}
-	});
+	} catch (err) {
+		console.log("err", err);
+		return c.json({ error: "Internal server error" }, 500);
+	}
+});

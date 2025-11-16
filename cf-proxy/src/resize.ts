@@ -126,49 +126,109 @@ const resizeWithPhoton = async (props: Props) => {
 	});
 };
 
-export default new Hono().all("/", async (c) => {
-	const isPOST = c.req.method === "POST";
-	const formData = isPOST ? await c.req.formData() : null;
-	const url = isPOST ? (formData.get("url") as string) : (c.req.query("url") as string);
-	const width = isPOST ? (formData.get("width") as string) : (c.req.query("width") as string);
-	const height = isPOST ? (formData.get("height") as string) : (c.req.query("height") as string);
-	const format = isPOST ? (formData.get("format") as string) : (c.req.query("format") as string);
-	const quality = isPOST ? (formData.get("quality") as string) : (c.req.query("quality") as string);
-	const mode = isPOST ? (formData.get("mode") as string) : (c.req.query("mode") as string);
+export default new Hono()
+	.all("/", async (c) => {
+		// const isPOST = c.req.method === "POST";
+		// const formData = isPOST ? await c.req.formData() : null;
+		// const url = isPOST ? (formData.get("url") as string) : (c.req.query("url") as string);
+		// const width = isPOST ? (formData.get("width") as string) : (c.req.query("width") as string);
+		// const height = isPOST ? (formData.get("height") as string) : (c.req.query("height") as string);
+		// const format = isPOST ? (formData.get("format") as string) : (c.req.query("format") as string);
+		// const quality = isPOST ? (formData.get("quality") as string) : (c.req.query("quality") as string);
+		// const mode = isPOST ? (formData.get("mode") as string) : (c.req.query("mode") as string);
 
-	const cacheUrl = c.req.url;
-	const cacheKey = new Request(cacheUrl.toString());
-	const cache = caches.default;
-	const cacheResponse = await cache.match(cacheKey);
-	if (cacheResponse) return cacheResponse;
+		const cacheUrl = c.req.url;
+		const cacheKey = cacheUrl.toString();
+		const cache = caches.default;
+		const cacheResponse = await cache.match(cacheKey);
+		console.log("cacheKey:", cacheKey);
+		console.log("cacheResponse:", cacheResponse);
+		if (cacheResponse) {
+			return cacheResponse;
+		}
 
-	let file = isPOST ? (formData.get("file") as File) : null;
-	if (url) file = await fetch(url).then(async (s) => new File([await s.arrayBuffer()], "def.jpg"));
-	if (!file) return c.json({ error: "No file or URL provided" }, 400);
-	const props: Props = {
-		file,
-		width: getNumber(width),
-		height: getNumber(height),
-		format: format as string,
-		quality: getNumber(quality),
-		mode: mode as any,
-	};
-
-	let response: Response;
-
-	try {
-		response = await resizeWithPhoton(props);
-	} catch (error) {
-		console.error("Resizing error:", error);
-		return new Response(file.stream(), {
+		const url = new URL(cacheUrl, "https://mc-nt0f8hjvtl.bunny.run");
+		url.pathname = "/resize";
+		url.hostname = "mc-nt0f8hjvtl.bunny.run";
+		const request = new Request(url.toString(), c.req.raw);
+		const resp = await fetch(request);
+		const response = new Response(resp.body, {
 			headers: {
-				"Content-Type": file.type,
-				"x-error": `${JSON.stringify(error)}`,
+				"Content-Type": resp.headers.get("Content-Type") || "image/jpeg",
+				"Cache-Control": "public, max-age=3600",
+				Vary: "Accept-Encoding",
+				"Accept-Ranges": "bytes",
+				ETag: resp.headers.get("ETag") || "",
 			},
+			// headers: resp.headers,
+			// status: resp.status,
 		});
-	}
+		if (response.status === 200) {
+			c.executionCtx.waitUntil(cache.put(cacheKey, response.clone()));
+			console.log("caching miss:");
+		}
+		return response;
 
-	if (!response) return new Response(file);
-	c.executionCtx.waitUntil(cache.put(cacheKey, response.clone()));
-	return response;
-});
+		// let file = isPOST ? (formData.get("file") as File) : null;
+		// if (url) file = await fetch(url).then(async (s) => new File([await s.arrayBuffer()], "def.jpg"));
+		// if (!file) return c.json({ error: "No file or URL provided" }, 400);
+		// const props: Props = {
+		// 	file,
+		// 	width: getNumber(width),
+		// 	height: getNumber(height),
+		// 	format: format as string,
+		// 	quality: getNumber(quality),
+		// 	mode: mode as any,
+		// };
+
+		// let response: Response;
+
+		// try {
+		// 	response = await resizeWithPhoton(props);
+		// } catch (error) {
+		// 	console.error("Resizing error:", error);
+		// 	return new Response(file.stream(), {
+		// 		headers: {
+		// 			"Content-Type": file.type,
+		// 			"x-error": `${JSON.stringify(error)}`,
+		// 		},
+		// 	});
+		// }
+
+		// if (!response) return new Response(file);
+		// c.executionCtx.waitUntil(cache.put(cacheKey, response.clone()));
+		// return response;
+	})
+	.get("/test", async (c) => {
+		const imageUrl = "https://i.ytimg.com/vi/xtJA_3kH4Qg/hqdefault.jpg";
+
+		const imgUrl = c.req.query("url") || c.req.query("img") || imageUrl;
+		const width = c.req.query("width");
+		const height = c.req.query("height");
+
+		const cacheUrl = c.req.url;
+		const cacheKey = new Request(cacheUrl.toString());
+		const cache = caches.default;
+		const cacheResponse = await cache.match(cacheKey);
+
+		if (cacheResponse) {
+			return new Response(cacheResponse.body, {
+				headers: cacheResponse.headers,
+			});
+		}
+
+		const stream = await fetch(imgUrl).then(async (res) => await res.arrayBuffer());
+		const file = new File([stream], "def.jpg");
+		const response = await resizeWithPhoton({
+			file,
+			width: getNumber(width),
+			height: getNumber(height),
+			format: "avif",
+			quality: 80,
+			mode: "cover",
+		});
+
+		c.executionCtx.waitUntil(cache.put(cacheKey, response.clone()));
+
+		return response;
+	});

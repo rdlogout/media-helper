@@ -4,7 +4,8 @@
 	"type": "module",
 	"packageManager": "pnpm@9.1.0",
 	"scripts": {
-		"dev": "bun run --hot src/index.ts"
+		"dev": "bun run --hot src/index.ts",
+		"deploy": "export TAG=0.4 && docker build --platform linux/amd64 -t base15log/media:$TAG . && docker push base15log/media:$TAG"
 	},
 	"dependencies": {
 		"@cf-wasm/photon": "^0.2.1",
@@ -15,9 +16,19 @@
 	},
 	"pnpm": {
 		"supportedArchitectures": {
-			"os": ["linux", "darwin", "win32"],
-			"cpu": ["x64", "arm64"],
-			"libc": ["glibc", "musl"]
+			"os": [
+				"linux",
+				"darwin",
+				"win32"
+			],
+			"cpu": [
+				"x64",
+				"arm64"
+			],
+			"libc": [
+				"glibc",
+				"musl"
+			]
 		}
 	},
 	"devDependencies": {

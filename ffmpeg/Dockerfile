@@ -13,6 +13,9 @@
 FROM oven/bun:1-alpine AS deps
 WORKDIR /app
 # Set environment variables for Sharp cross-platform installation
+# Use build arguments to set the target architecture
+ARG TARGETARCH
+ENV npm_config_arch=${TARGETARCH}
 ENV npm_config_platform=linux
 ENV npm_config_libc=musl
 # Copy only manifests to maximize layer cache hits
@@ -60,7 +63,8 @@ RUN apk add --no-cache \
     orc \
     orc-dev
 
-# Copy only the bundled server for minimal startup I/O
+# Copy production node_modules and the bundled server
+COPY --from=deps /app/node_modules /app/node_modules
 COPY --from=build /app/server.js ./
 
 # Healthcheck: consider container ready when port 3000 accepts connections
