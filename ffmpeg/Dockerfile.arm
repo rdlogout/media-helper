@@ -1,27 +1,24 @@
 # syntax=docker/dockerfile:1.6
 
 # ARM-optimized media processing container
-# - Uses ARM64-specific optimizations for Bun, Sharp, and FFmpeg
-# - Multi-stage build with aggressive layer caching for ARM architecture
-# - ARM-optimized Alpine packages for media processing
-# - Sharp binary selection optimized for ARM64 Linux musl
+# Key fix: Let Sharp use its own pre-compiled ARM64 libvips binary instead of Alpine's
 
 ############################################
-# deps: ARM-optimized dependency installation (without Sharp)
+# deps: ARM-optimized dependency installation
 ############################################
 FROM --platform=linux/arm64 oven/bun:1-alpine AS deps
 WORKDIR /app
 
-# Copy manifests first for optimal layer caching
 COPY package.json bun.lock ./
 
-# Install dependencies excluding Sharp (will be installed separately in runtime)
-RUN apk add --no-cache --virtual .gyp \
+# Install ALL dependencies including Sharp here with proper ARM64 binary
+# Critical: Install minimal build deps, let Sharp download its optimized binary
+RUN apk add --no-cache \
     python3 \
     make \
     g++ \
     && bun install --production \
-    && apk del .gyp
+    && apk del python3 make g++
 
 ############################################
 # build: ARM-optimized TypeScript compilation
@@ -29,12 +26,10 @@ RUN apk add --no-cache --virtual .gyp \
 FROM --platform=linux/arm64 oven/bun:1-alpine AS build
 WORKDIR /app
 
-# Copy dependencies from previous stage
 COPY --from=deps /app/node_modules ./node_modules
 COPY package.json bun.lock tsconfig.json ./
 COPY src/ ./src/
 
-# ARM-optimized build with aggressive minification and tree-shaking
 RUN bun build --target bun \
     --minify-whitespace \
     --minify-syntax \
@@ -46,70 +41,44 @@ RUN bun build --target bun \
     --outfile server.js
 
 ############################################
-# runtime: ARM-optimized minimal runtime with Sharp
+# runtime: Minimal runtime with Sharp's pre-built ARM64 binary
 ############################################
 FROM --platform=linux/arm64 oven/bun:1-alpine AS runtime
 ENV NODE_ENV=production
 WORKDIR /app
 
-# ARM-optimized FFmpeg and media libraries
+# CRITICAL FIX: Only install minimal runtime dependencies
+# Do NOT install vips/vips-dev - Sharp brings its own optimized binary
 RUN apk add --no-cache --update \
-    # ARM-optimized FFmpeg with NEON support
+    # FFmpeg for video processing
     ffmpeg \
-    # ARM64-optimized Vips/Sharp dependencies
-    vips \
-    vips-cpp \
-    vips-dev \
-    # ARM64-optimized image processing libraries
+    # Minimal runtime libraries (not dev packages)
     glib \
-    glib-dev \
     expat \
-    expat-dev \
-    giflib \
+    # These are needed for Sharp's binary to run
+    libstdc++ \
+    libgomp \
     libjpeg-turbo \
     libpng \
     libwebp \
-    orc \
-    orc-dev \
-    # ARM64-specific optimizations
-    pixman \
-    cairo \
-    pango \
-    # Additional ARM64 media libraries
-    libgomp \
-    # Sharp ARM64 binary dependencies
-    python3 \
-    make \
-    g++ \
+    giflib \
     && rm -rf /var/cache/apk/*
 
-# Install Sharp with ARM64-optimized binaries using Bun
-ENV npm_config_arch=arm64
-ENV npm_config_platform=linux
-ENV npm_config_libc=musl
-ENV npm_config_disturl=https://nodejs.org/dist
-ENV npm_config_target_arch=arm64
-ENV npm_config_target_platform=linux
-ENV npm_config_target_libc=musl
-ENV SHARP_IGNORE_GLOBAL_LIBVIPS=1
-ENV SHARP_DIST_BASE_URL=https://github.com/lovell/sharp/releases/download
+# Sharp environment - let it use its own pre-compiled ARM64 binary
+ENV SHARP_IGNORE_GLOBAL_LIBVIPS=0
+ENV SHARP_FORCE_GLOBAL_LIBVIPS=false
 
-# Copy package files for Sharp installation
-COPY package.json bun.lock ./
-
-# Install Sharp with ARM64 binaries using Bun
-RUN bun install sharp@0.34.5 --production \
-    && bun install @cf-wasm/photon@0.2.1 --production
-
-# Copy other dependencies and application
+# Copy everything from deps (includes Sharp with correct binary)
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=build /app/server.js ./
+COPY package.json ./
 
-# ARM64-specific health check with timeout optimization
+# Verify Sharp installation
+RUN bun -e "const sharp = require('sharp'); console.log('Sharp version:', sharp.versions); process.exit(0)"
+
 HEALTHCHECK --interval=10s --timeout=3s --start-period=5s --retries=3 \
-  CMD bun -e "fetch('http://127.00.1:3000/').then(()=>process.exit(0)).catch(()=>process.exit(1))" || exit 1
+  CMD bun -e "fetch('http://127.0.0.1:3000/').then(()=>process.exit(0)).catch(()=>process.exit(1))" || exit 1
 
 EXPOSE 3000
 
-# ARM-optimized startup
 CMD ["bun", "server.js"]
