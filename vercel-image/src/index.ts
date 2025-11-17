@@ -17,11 +17,11 @@ app.get("/image", async (c) => {
 	const stream = await fetch(imageUrl).then((res) => res.arrayBuffer());
 	console.log(`Downloaded image from ${imageUrl} in ${performance.now() - start}ms`);
 	start = performance.now();
-	const resizedStream = (await sharp(Buffer.from(stream)).resize(Number(width), Number(height)).toBuffer()) as any;
+	const resizedStream = (await sharp(Buffer.from(stream)).resize(Number(width), Number(height)).avif().toBuffer()) as any;
 	console.log(`Resized image to ${width}x${height} in ${performance.now() - start}ms`);
 	return new Response(resizedStream, {
 		headers: {
-			"Content-Type": "image/jpeg",
+			"Content-Type": "image/avif",
 			"Cache-Control": "public, max-age=604800",
 		},
 	});
