@@ -13,11 +13,16 @@ app.get("/image", async (c) => {
 	const width = c.req.query("width") || 200;
 	const height = c.req.query("height") || 200;
 	const imageUrl = c.req.query("url") || "https://i.ytimg.com/vi/xtJA_3kH4Qg/hqdefault.jpg";
+	let start = performance.now();
 	const stream = await fetch(imageUrl).then((res) => res.arrayBuffer());
+	console.log(`Downloaded image from ${imageUrl} in ${performance.now() - start}ms`);
+	start = performance.now();
 	const resizedStream = (await sharp(Buffer.from(stream)).resize(Number(width), Number(height)).toBuffer()) as any;
+	console.log(`Resized image to ${width}x${height} in ${performance.now() - start}ms`);
 	return new Response(resizedStream, {
 		headers: {
 			"Content-Type": "image/jpeg",
+			"Cache-Control": "public, max-age=604800",
 		},
 	});
 });
