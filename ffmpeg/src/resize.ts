@@ -43,11 +43,13 @@ export default new Hono().use("*", etag()).on(["POST", "GET"], "/", async (c) =>
 
 	let file = body.file as File;
 	const url = body.url as string | null;
-	const start = performance.now();
+	let start = performance.now();
 	if (url) file = (await fetch(url).then(async (res) => new File([await res.arrayBuffer()], "image.avif"))) as File;
+	console.log(`Downloaded file from ${url} in ${performance.now() - start}ms`);
 	if (!file) return c.json({ error: "Invalid file" }, 400);
 	const format = (body.format as string) || "avif";
 	try {
+		start = performance.now();
 		const respFile = await resizeImage({
 			file: file,
 			width: body.width as number | string | null,
