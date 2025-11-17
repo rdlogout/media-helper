@@ -7,33 +7,20 @@
 # - Sharp binary selection optimized for ARM64 Linux musl
 
 ############################################
-# deps: ARM-optimized dependency installation
+# deps: ARM-optimized dependency installation (without Sharp)
 ############################################
 FROM --platform=linux/arm64 oven/bun:1-alpine AS deps
 WORKDIR /app
 
-# ARM64 build arguments for optimal binary selection
-ARG TARGETARCH=arm64
-ARG TARGETVARIANT=v8
-
-# Sharp ARM64 optimization environment variables
-ENV npm_config_arch=arm64
-ENV npm_config_platform=linux
-ENV npm_config_libc=musl
-ENV npm_config_disturl=https://nodejs.org/dist
-ENV npm_config_target_arch=arm64
-ENV npm_config_target_platform=linux
-ENV npm_config_target_libc=musl
-
 # Copy manifests first for optimal layer caching
 COPY package.json bun.lock ./
 
-# ARM-optimized dependency installation with Sharp binary pre-selection
+# Install dependencies excluding Sharp (will be installed separately in runtime)
 RUN apk add --no-cache --virtual .gyp \
     python3 \
     make \
     g++ \
-    && npm_config_arch=arm64 npm_config_platform=linux npm_config_libc=musl bun install --production \
+    && bun install --production \
     && apk del .gyp
 
 ############################################
@@ -41,11 +28,6 @@ RUN apk add --no-cache --virtual .gyp \
 ############################################
 FROM --platform=linux/arm64 oven/bun:1-alpine AS build
 WORKDIR /app
-
-# ARM64 build environment
-ENV npm_config_arch=arm64
-ENV npm_config_platform=linux
-ENV npm_config_libc=musl
 
 # Copy dependencies from previous stage
 COPY --from=deps /app/node_modules ./node_modules
@@ -64,7 +46,7 @@ RUN bun build --target bun \
     --outfile server.js
 
 ############################################
-# runtime: ARM-optimized minimal runtime
+# runtime: ARM-optimized minimal runtime with Sharp
 ############################################
 FROM --platform=linux/arm64 oven/bun:1-alpine AS runtime
 ENV NODE_ENV=production
@@ -95,9 +77,31 @@ RUN apk add --no-cache --update \
     pango \
     # Additional ARM64 media libraries
     libgomp \
+    # Sharp ARM64 binary dependencies
+    python3 \
+    make \
+    g++ \
     && rm -rf /var/cache/apk/*
 
-# Copy optimized application
+# Install Sharp with ARM64-optimized binaries directly
+ENV npm_config_arch=arm64
+ENV npm_config_platform=linux
+ENV npm_config_libc=musl
+ENV npm_config_disturl=https://nodejs.org/dist
+ENV npm_config_target_arch=arm64
+ENV npm_config_target_platform=linux
+ENV npm_config_target_libc=musl
+ENV SHARP_IGNORE_GLOBAL_LIBVIPS=1
+ENV SHARP_DIST_BASE_URL=https://github.com/lovell/sharp/releases/download
+
+# Copy package files for Sharp installation
+COPY package.json bun.lock ./
+
+# Install Sharp with ARM64 binaries
+RUN npm install sharp@0.34.5 --no-save --no-package-lock \
+    && npm install @cf-wasm/photon@0.2.1 --no-save --no-package-lock
+
+# Copy other dependencies and application
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=build /app/server.js ./
 
