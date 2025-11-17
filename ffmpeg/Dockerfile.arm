@@ -83,7 +83,7 @@ RUN apk add --no-cache --update \
     g++ \
     && rm -rf /var/cache/apk/*
 
-# Install Sharp with ARM64-optimized binaries directly
+# Install Sharp with ARM64-optimized binaries using Bun
 ENV npm_config_arch=arm64
 ENV npm_config_platform=linux
 ENV npm_config_libc=musl
@@ -97,9 +97,9 @@ ENV SHARP_DIST_BASE_URL=https://github.com/lovell/sharp/releases/download
 # Copy package files for Sharp installation
 COPY package.json bun.lock ./
 
-# Install Sharp with ARM64 binaries
-RUN npm install sharp@0.34.5 --no-save --no-package-lock \
-    && npm install @cf-wasm/photon@0.2.1 --no-save --no-package-lock
+# Install Sharp with ARM64 binaries using Bun
+RUN bun install sharp@0.34.5 --production \
+    && bun install @cf-wasm/photon@0.2.1 --production
 
 # Copy other dependencies and application
 COPY --from=deps /app/node_modules ./node_modules
