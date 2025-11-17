@@ -19,7 +19,9 @@ const getNumber = (value: number | string | null | undefined) => {
 
 const resizeImage = async (props: Props) => {
 	const inputBytes = await props.file.arrayBuffer();
+	let start = performance.now();
 	const metaData = await sharp(Buffer.from(inputBytes)).metadata();
+	console.log(`Metadata extracted in ${performance.now() - start}ms`);
 	const imageWidth = metaData.width || 0;
 	const imageHeight = metaData.height || 0;
 	const aspectRatio = imageWidth / imageHeight;
@@ -32,8 +34,9 @@ const resizeImage = async (props: Props) => {
 		height = askedHeight;
 	} else if (askedWidth) height = Math.round(askedWidth / aspectRatio);
 	else if (askedHeight) width = Math.round(askedHeight * aspectRatio);
-
+	start = performance.now();
 	const resizedStream = await sharp(Buffer.from(inputBytes)).resize(width, height).avif().toBuffer();
+	console.log(`Resized image to ${width}x${height} in ${performance.now() - start}ms`);
 	return resizedStream;
 };
 
