@@ -1,6 +1,5 @@
 import { Hono } from "hono";
 import { etag } from "hono/etag";
-import crypto from "crypto";
 import sharp from "sharp";
 const imageUrl = "https://i.ytimg.com/vi/xtJA_3kH4Qg/hqdefault.jpg";
 
@@ -44,6 +43,7 @@ export default new Hono().use("*", etag()).on(["POST", "GET"], "/", async (c) =>
 
 	let file = body.file as File;
 	const url = body.url as string | null;
+	const start = performance.now();
 	if (url) file = (await fetch(url).then(async (res) => new File([await res.arrayBuffer()], "image.avif"))) as File;
 	if (!file) return c.json({ error: "Invalid file" }, 400);
 	const format = (body.format as string) || "avif";
@@ -59,6 +59,7 @@ export default new Hono().use("*", etag()).on(["POST", "GET"], "/", async (c) =>
 			status: 200,
 			headers: {
 				"Content-Type": "image/" + format,
+				"X-TIME": `${performance.now() - start}ms`,
 				"Cache-Control": "public, max-age=604800, s-maxage=86400, stale-while-revalidate=604800",
 			},
 		});

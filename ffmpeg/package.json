@@ -5,7 +5,7 @@
 	"packageManager": "pnpm@9.1.0",
 	"scripts": {
 		"dev": "bun run --hot src/index.ts",
-		"deploy": "export TAG=0.4 && docker build --platform linux/amd64 -t base15log/media:$TAG . && docker push base15log/media:$TAG"
+		"deploy": "export TAG=0.5 && docker build --platform linux/amd64 -t base15log/media:$TAG . && docker push base15log/media:$TAG"
 	},
 	"dependencies": {
 		"@cf-wasm/photon": "^0.2.1",
