@@ -1,0 +1,111 @@
+# syntax=docker/dockerfile:1.6
+
+# ARM-optimized media processing container
+# - Uses ARM64-specific optimizations for Bun, Sharp, and FFmpeg
+# - Multi-stage build with aggressive layer caching for ARM architecture
+# - ARM-optimized Alpine packages for media processing
+# - Sharp binary selection optimized for ARM64 Linux musl
+
+############################################
+# deps: ARM-optimized dependency installation
+############################################
+FROM --platform=linux/arm64 oven/bun:1-alpine AS deps
+WORKDIR /app
+
+# ARM64 build arguments for optimal binary selection
+ARG TARGETARCH=arm64
+ARG TARGETVARIANT=v8
+
+# Sharp ARM64 optimization environment variables
+ENV npm_config_arch=arm64
+ENV npm_config_platform=linux
+ENV npm_config_libc=musl
+ENV npm_config_disturl=https://nodejs.org/dist
+ENV npm_config_target_arch=arm64
+ENV npm_config_target_platform=linux
+ENV npm_config_target_libc=musl
+
+# Copy manifests first for optimal layer caching
+COPY package.json bun.lock ./
+
+# ARM-optimized dependency installation with Sharp binary pre-selection
+RUN apk add --no-cache --virtual .gyp \
+    python3 \
+    make \
+    g++ \
+    && npm_config_arch=arm64 npm_config_platform=linux npm_config_libc=musl bun install --production \
+    && apk del .gyp
+
+############################################
+# build: ARM-optimized TypeScript compilation
+############################################
+FROM --platform=linux/arm64 oven/bun:1-alpine AS build
+WORKDIR /app
+
+# ARM64 build environment
+ENV npm_config_arch=arm64
+ENV npm_config_platform=linux
+ENV npm_config_libc=musl
+
+# Copy dependencies from previous stage
+COPY --from=deps /app/node_modules ./node_modules
+COPY package.json bun.lock tsconfig.json ./
+COPY src/ ./src/
+
+# ARM-optimized build with aggressive minification and tree-shaking
+RUN bun build --target bun \
+    --minify-whitespace \
+    --minify-syntax \
+    --minify-identifiers \
+    --sourcemap=none \
+    --external sharp \
+    --external fluent-ffmpeg \
+    ./src/index.ts \
+    --outfile server.js
+
+############################################
+# runtime: ARM-optimized minimal runtime
+############################################
+FROM --platform=linux/arm64 oven/bun:1-alpine AS runtime
+ENV NODE_ENV=production
+WORKDIR /app
+
+# ARM-optimized FFmpeg and media libraries
+RUN apk add --no-cache --update \
+    # ARM-optimized FFmpeg with NEON support
+    ffmpeg \
+    # ARM64-optimized Vips/Sharp dependencies
+    vips \
+    vips-cpp \
+    vips-dev \
+    # ARM64-optimized image processing libraries
+    glib \
+    glib-dev \
+    expat \
+    expat-dev \
+    giflib \
+    libjpeg-turbo \
+    libpng \
+    libwebp \
+    orc \
+    orc-dev \
+    # ARM64-specific optimizations
+    pixman \
+    cairo \
+    pango \
+    # Additional ARM64 media libraries
+    libgomp \
+    && rm -rf /var/cache/apk/*
+
+# Copy optimized application
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=build /app/server.js ./
+
+# ARM64-specific health check with timeout optimization
+HEALTHCHECK --interval=10s --timeout=3s --start-period=5s --retries=3 \
+  CMD bun -e "fetch('http://127.00.1:3000/').then(()=>process.exit(0)).catch(()=>process.exit(1))" || exit 1
+
+EXPOSE 3000
+
+# ARM-optimized startup
+CMD ["bun", "server.js"]
