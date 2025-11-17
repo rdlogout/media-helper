@@ -55,11 +55,13 @@ export default new Hono().use("*", etag()).on(["POST", "GET"], "/", async (c) =>
 			quality: body.quality as number | string | null,
 			format: format,
 		});
+		const duration = performance.now() - start;
+		console.log("duration", duration);
 		return new Response(Buffer.from(respFile), {
 			status: 200,
 			headers: {
 				"Content-Type": "image/" + format,
-				"X-TIME": `${performance.now() - start}ms`,
+				"X-TIME": `${duration}ms`,
 				"Cache-Control": "public, max-age=604800, s-maxage=86400, stale-while-revalidate=604800",
 			},
 		});
