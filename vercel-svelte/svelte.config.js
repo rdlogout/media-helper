@@ -8,7 +8,7 @@ const config = {
 	preprocess: vitePreprocess(),
 	kit: {
 		paths: {
-			assets: `https://m2.fussion.studio`,
+			assets: `https://m1.fussion.studio`,
 		},
 		// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
 		// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
