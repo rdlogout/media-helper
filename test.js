@@ -1,6 +1,6 @@
 const makeReq = async () => {
 	try {
-		const res = await fetch("http://cdn83151601.blazingcdn.net/_app/immutable/chunks/gTrRNI9q.js");
+		const res = await fetch("https://m1.fussion.studio/");
 		// const data = await res.json();
 		return true;
 	} catch (err) {
