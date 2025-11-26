@@ -1,63 +1,73 @@
-import { PhotonImage, SamplingFilter, initPhoton, resize } from "@cf-wasm/photon/others";
-import photonWasm from "@cf-wasm/photon/photon.wasm"; // Binary Uint8Array—no ?module, no early instantiation
 import { fire } from "@fastly/hono-fastly-compute";
+import { SimpleCache } from "fastly:cache";
 import { Hono } from "hono";
-
-let photonReady: Promise<void> | null = null;
-
-async function ensurePhotonReady() {
-	if (!photonReady) {
-		// Diagnostic: Log WASM global availability (should be 'object')
-		console.log("WebAssembly global:", typeof WebAssembly);
-		if (typeof WebAssembly === "undefined") {
-			throw new Error("WebAssembly global unavailable—check runtime config");
-		}
-		photonReady = initPhoton({ wasm_bytes: photonWasm });
-		await photonReady;
-		console.log("Photon initialized successfully");
-	} else {
-		await photonReady;
-	}
-}
 
 const app = new Hono();
 
-app.get("/", (c) => c.text("Hello Hono!"));
+app.all("*", async (c) => {
+	const url = new URL(c.req.url);
+	// Construct the target URL.
+	// Note: We use the pathname and search from the original request, but target the Vercel app.
+	const targetUrl = new URL(url.pathname + url.search, "https://media-helper-31l8.vercel.app");
 
-app.get("/resize", async (c) => {
-	try {
-		await ensurePhotonReady();
-		const imgUrl = c.req.query("url") || c.req.query("img") || "https://i.ytimg.com/vi/xtJA_3kH4Qg/hqdefault.jpg";
-		let targetWidth = Number(c.req.query("width")) || 300;
-		let targetHeight = Number(c.req.query("height")) || 300;
+	// Use the full URL as the cache key.
+	const cacheKey = targetUrl.toString();
 
-		const res = await fetch(imgUrl);
-		if (!res.ok) return c.text("Failed to fetch image", 400);
-		const arrayBuffer = await res.arrayBuffer();
-		const inputBytes = new Uint8Array(arrayBuffer);
+	// 1. Try to get from SimpleCache
+	// SimpleCache is a key-value store. It stores the body content.
+	let entry = SimpleCache.get(cacheKey);
+	let response;
 
-		const inputImage = PhotonImage.new_from_byteslice(inputBytes);
-
-		// Proportional resize if only one dim provided
-		if (!c.req.query("width") || !c.req.query("height")) {
-			const aspectRatio = inputImage.get_width() / inputImage.get_height();
-			if (targetWidth && !targetHeight) targetHeight = Math.round(targetWidth / aspectRatio);
-			else if (targetHeight && !targetWidth) targetWidth = Math.round(targetHeight * aspectRatio);
-		}
-
-		const outputImage = resize(inputImage, targetWidth, targetHeight, SamplingFilter.Lanczos3);
-		const outputBytes = outputImage.get_bytes_webp();
-
-		inputImage.free();
-		outputImage.free();
-
-		return new Response(outputBytes, {
-			headers: { "Content-Type": "image/webp", "Cache-Control": "public, max-age=3600" },
+	if (entry) {
+		// HIT
+		// Create a response from the cached body.
+		// Note: SimpleCache does not store original response headers automatically.
+		// We return the body with a generic 200 OK, or we would need to store metadata to reconstruct headers.
+		response = new Response(entry.body, {
+			status: 200,
+			headers: {
+				"X-CF-Proxy": "hit",
+			},
 		});
-	} catch (error) {
-		console.error("Processing error:", error);
-		return c.text(`Image processing failed: ${error.message}`, 500);
+	} else {
+		// MISS
+		// Fetch from origin.
+		// Note: 'vercel_app' backend must be defined in fastly.toml or allowed via dynamic backends.
+		const responseFromOrigin = await fetch(targetUrl.toString(), {
+			headers: {
+				...c.req.header(),
+				"X-worked": "true",
+			},
+			method: c.req.method,
+			body: c.req.raw.body,
+			redirect: "follow",
+			backend: "vercel_app",
+		});
+
+		// Create the response to return.
+		response = new Response(responseFromOrigin.body, responseFromOrigin);
+		response.headers.set("X-CF-Proxy", "miss");
+
+		// Cache if GET and 200 OK
+		if (c.req.method === "GET" && response.status === 200) {
+			// Clone the response to cache it because the body can only be read once.
+			const responseToCache = response.clone();
+
+			// Use waitUntil to keep the worker alive while caching
+			c.executionCtx.waitUntil(
+				new Promise((resolve) => {
+					// SimpleCache.set schedules the write.
+					// We use a default TTL of 60 seconds (adjust as needed).
+					if (responseToCache.body) {
+						SimpleCache.set(cacheKey, responseToCache.body, 60);
+					}
+					resolve(null);
+				})
+			);
+		}
 	}
+
+	return response;
 });
 
 export default fire(app);

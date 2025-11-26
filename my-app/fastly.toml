@@ -10,6 +10,9 @@ service_id = "vySujQaXemyirejqiBLugr"
 
 [local_server]
 
+[local_server.backends.vercel_app]
+  url = "https://media-helper-31l8.vercel.app"
+
 [scripts]
   build = "npm run build"
   post_init = "npm install"
