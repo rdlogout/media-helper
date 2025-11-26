@@ -1,6 +1,6 @@
 const makeReq = async () => {
 	try {
-		const res = await fetch("https://mc-nt0f8hjvtl.bunny.run/resize");
+		const res = await fetch("http://cdn83151601.blazingcdn.net/_app/immutable/chunks/gTrRNI9q.js");
 		// const data = await res.json();
 		return true;
 	} catch (err) {
